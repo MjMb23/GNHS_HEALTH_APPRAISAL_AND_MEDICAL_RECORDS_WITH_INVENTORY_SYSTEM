@@ -1,0 +1,26 @@
+.nav_buttons{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-width: .2;
+    -fx-border-color: white;
+}
+
+.nav_buttons:hover{
+    -fx-background-color: #138ec7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-width: .2;
+    -fx-border-color: white;
+}
+
+.nav_buttons:focused{
+    -fx-background-color: #1c84c6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-width: .2;
+    -fx-border-color: white;
+}

@@ -1,0 +1,38 @@
+.saveButtons{
+    -fx-background-color: #009cc7;
+    -fx-text-fill: white;
+}
+
+.saveButtons:hover{
+    -fx-background-color: #1c84c6;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.addButtons,.actionButtons{
+    -fx-background-color: #1ab394;
+    -fx-text-fill: white;
+}
+
+.addButtons:hover{
+    -fx-background-color: #009574;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.actionButtons:hover{
+    -fx-background-color: #009574;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.clearButtons{
+    -fx-background-color:  #ed5565;
+    -fx-text-fill: white;
+}
+
+.clearButtons:hover{
+    -fx-background-color: #ed263a;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}

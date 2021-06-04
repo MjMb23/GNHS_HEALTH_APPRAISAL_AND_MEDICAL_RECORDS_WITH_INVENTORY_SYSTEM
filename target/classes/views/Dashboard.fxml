@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1500.0" style="-fx-background-color: #eff3f6;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.Dashboard_Controller">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="730.0" prefWidth="200.0" style="-fx-background-color: #009cc7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fitHeight="139.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/school_logo.png" />
+               </image>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </ImageView>
+            <Button fx:id="healthAppraisalNavButton" mnemonicParsing="false" onAction="#healthAppraisalNavButtonClicked" prefHeight="70.0" prefWidth="200.0" styleClass="nav_buttons" text="HEALTH APPRAISAL">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="inventoryNavButton" mnemonicParsing="false" onAction="#inventoryNavButtonClicked" prefHeight="70.0" prefWidth="200.0" styleClass="nav_buttons" text="MEDICINE INVENTORY" />
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </VBox>
+      <HBox alignment="CENTER" layoutX="200.0" layoutY="62.0" prefHeight="46.0" prefWidth="1300.0" style="-fx-background-color: #2f4050;" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="62.0">
+         <children>
+            <Text fx:id="titleText" fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="MEDICAL RECORDS/HEALTH APPRAISAL/MEDICINE INVENTORY SYSTEM">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+      <AnchorPane fx:id="inventoryContainer" layoutX="220.0" layoutY="123.0" prefHeight="587.0" prefWidth="1260.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="130.0">
+         <children>
+            <TableView fx:id="itemSummaryTable" layoutY="50.0" prefHeight="537.0" prefWidth="1260.0" stylesheets="@../styles/Dashboard.css" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+               <columns>
+                  <TableColumn fx:id="itemNameColumn" prefWidth="342.4000244140625" text="Item Name" />
+                  <TableColumn fx:id="itemTypeColumn" prefWidth="159.199951171875" text="Type" />
+                  <TableColumn fx:id="quantityColumn" prefWidth="121.60003662109375" text="Quantity" />
+                  <TableColumn fx:id="dispensedColumn" editable="false" prefWidth="139.99993896484375" text="No. of Dispensed" />
+                  <TableColumn fx:id="availableColumn" editable="false" prefWidth="139.99993896484375" text="Available" />
+                  <TableColumn fx:id="unitColumn" prefWidth="132.0" text="Unit" />
+                  <TableColumn fx:id="actionColumn" prefWidth="330.4000244140625" text="Action" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Button fx:id="createItemButton" layoutX="1126.0" mnemonicParsing="false" onAction="#createItemButtonClicked" prefHeight="26.0" prefWidth="133.0" styleClass="actionButtons" text="Create New Item" AnchorPane.rightAnchor="0.40000000000009095" AnchorPane.topAnchor="6.0" />
+            <Label layoutY="10.0" text="Search by:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0" />
+            <ComboBox fx:id="itemFilterCombobox" layoutX="59.0" layoutY="6.0" onAction="#itemFilterComboboxChanged" prefWidth="150.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="6.0" />
+            <Label layoutX="230.0" layoutY="10.0" text="Search for:" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="itemField" layoutX="291.0" layoutY="6.0" onKeyReleased="#itemFieldKeyReleased" AnchorPane.leftAnchor="292.0" AnchorPane.topAnchor="6.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="healthAppraisalContainer" layoutX="200.0" layoutY="113.0" prefHeight="597.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="130.0">
+         <children>
+            <TableView fx:id="patientInfoTable" layoutY="43.0" prefHeight="537.0" prefWidth="1260.0" stylesheets="@../styles/Dashboard.css" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+              <columns>
+                  <TableColumn fx:id="patientLastnameColumn" prefWidth="200.0" text="Last name" />
+                <TableColumn fx:id="patientFirstnameColumn" prefWidth="200.0" text="First name" />
+                  <TableColumn fx:id="patientMiddleNameColumn" prefWidth="200.0" text="Middle name" />
+                  <TableColumn fx:id="patientActionsColumn" prefWidth="75.0" text="Actions" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Button fx:id="createRecordButton" layoutX="1126.0" layoutY="6.0" mnemonicParsing="false" onAction="#createRecordButtonClicked" prefHeight="26.0" prefWidth="133.0" styleClass="actionButtons" text="Create New Record" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0" />
+            <Label layoutY="10.0" text="Search by:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0" />
+            <ComboBox fx:id="recordsFilterCombobox" layoutX="60.0" layoutY="6.0" onAction="#recordsFilterComboboxSelectionChanged" prefWidth="150.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="6.0" />
+            <Label layoutX="230.0" layoutY="10.0" text="Search for:" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="recordSearchForField" layoutX="292.0" layoutY="6.0" onAction="#recordSearchForFieldEnterClicked" onKeyReleased="#searchKeyReleased" AnchorPane.leftAnchor="292.0" AnchorPane.topAnchor="6.0" />
+         </children>
+      </AnchorPane>
+      <HBox alignment="CENTER" layoutX="200.0" prefHeight="46.0" prefWidth="1300.0" style="-fx-background-color: #2f4050;" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="GORDON HEIGHTS NATIONAL HIGH SCHOOL">
+               <font>
+                  <Font size="48.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </children>
+   <stylesheets>
+      <URL value="@../styles/Styles.css" />
+      <URL value="@../styles/overall_design.css" />
+   </stylesheets>
+</AnchorPane>

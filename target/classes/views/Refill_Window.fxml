@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="400.0" stylesheets="@../styles/overall_design.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.Refill_Window_Controller">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+         <children>
+            <VBox prefHeight="44.0" prefWidth="219.0">
+               <children>
+                  <Label text="Choose Item" />
+                  <ComboBox fx:id="itemCombobox" onAction="#itemSelectionChanged" prefHeight="26.0" prefWidth="230.0" promptText="Select Item Here" />
+               </children>
+            </VBox>
+            <VBox prefHeight="43.0" prefWidth="130.0">
+               <children>
+                  <Label text="Quantity" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="quantityField" prefHeight="26.0" prefWidth="62.0" />
+                        <Label fx:id="unitLabel" text="unit">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefWidth="200.0">
+         <children>
+            <VBox prefHeight="44.0" prefWidth="175.0">
+               <children>
+                  <Label text="Entry Date(dd/mm/yyyy)" />
+                  <DatePicker fx:id="entryDatePicker" prefHeight="26.0" prefWidth="183.0" />
+               </children>
+            </VBox>
+            <VBox prefWidth="175.0">
+               <children>
+                  <Label text="Expiration Date(dd/mm/yyyy)" />
+                  <DatePicker fx:id="expirationDatePicker" prefHeight="26.0" prefWidth="183.0" />
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <Label prefHeight="18.0" prefWidth="472.0" text="Remarks">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
+      <TextArea fx:id="remarksTextArea" prefHeight="57.0" prefWidth="360.0" />
+      <Button fx:id="refillButton" mnemonicParsing="false" onAction="#refillButtonClicked" prefHeight="26.0" prefWidth="83.0" styleClass="saveButtons" text="Refill">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

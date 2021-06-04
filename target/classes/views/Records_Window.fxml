@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="800.0" style="-fx-background-color: #eff3f6;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.Records_Controller">
+   <children>
+      <Label text="Patient Information">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="patientInformationArea" editable="false" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="421.0" prefWidth="760.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextArea>
+      <VBox prefWidth="100.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Vital Signs">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <HBox alignment="CENTER_LEFT" prefWidth="760.0">
+               <children>
+                  <Label text="BP:" />
+                  <TextField fx:id="BPField" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="80.0" promptText="0/0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="2.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="mmHg">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Italic" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label text="TEMP:">
+                     <HBox.margin>
+                        <Insets left="33.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="TEMPField" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="80.0" promptText="0.00">
+                     <HBox.margin>
+                        <Insets left="5.0" right="2.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="°C">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Italic" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label text="RR:">
+                     <HBox.margin>
+                        <Insets left="33.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="RRField" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="80.0" promptText="0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="2.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="BRPM">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Italic" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label text="PR:">
+                     <HBox.margin>
+                        <Insets left="33.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="PRField" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="80.0" promptText="0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="2.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="BPM">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Italic" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label text="O2:">
+                     <HBox.margin>
+                        <Insets left="33.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="O2Field" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="77.0" promptText="0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="2.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </VBox>
+      <HBox prefHeight="150.0" prefWidth="800.0">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <Label text="Chief Complaint" />
+                  <TextArea fx:id="chiefComplaintArea" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <Label text="Management or Treatment" />
+                  <TextArea fx:id="managementArea" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="150.0" prefWidth="319.0">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Medicine or Equipment" />
+                        <Label text="Quantity">
+                           <HBox.margin>
+                              <Insets left="45.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                     <children>
+                        <ChoiceBox fx:id="itemChoiceBox" prefHeight="26.0" prefWidth="164.0" />
+                        <TextField fx:id="quantityField" prefHeight="26.0" prefWidth="68.0" promptText="quantity" text="1" />
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addButtonClicked" prefHeight="24.0" prefWidth="80.0" styleClass="addButtons" text="Add" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="itemColumn" prefWidth="168.7999267578125" text="Item" />
+                      <TableColumn fx:id="quantityColumn" prefWidth="78.4000244140625" text="Quantity" />
+                        <TableColumn fx:id="actionColumn" prefWidth="72.0" text="Actions" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefWidth="800.0" spacing="10.0">
+         <VBox.margin>
+            <Insets bottom="2.0" top="20.0" />
+         </VBox.margin>
+         <children>
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearButtonClicked" prefHeight="26.0" prefWidth="88.0" styleClass="clearButtons" text="Clear" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonClicked" prefHeight="26.0" prefWidth="88.0" styleClass="saveButtons" text="Save" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@../styles/Dashboard.css" />
+      <URL value="@../styles/overall_design.css" />
+   </stylesheets>
+</VBox>

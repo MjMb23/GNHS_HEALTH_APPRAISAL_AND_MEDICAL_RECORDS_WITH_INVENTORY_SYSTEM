@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="569.0" y="-1.0">models.Batch</node>
+    <node x="169.5" y="0.0">models.Person</node>
+    <node x="0.0" y="527.0">models.Item</node>
+    <node x="0.0" y="318.0">models.Patient_Info</node>
+    <node x="374.0" y="527.0">models.History</node>
+    <node x="599.0" y="527.0">models.Notifications</node>
+    <node x="248.0" y="373.0">models.Patient_Information_Summary</node>
+    <node x="189.0" y="214.0">models.Patient</node>
+    <node x="185.0" y="527.0">models.Item_Summary</node>
+    <node x="6.0" y="675.0">models.Item_Given</node>
+    <node x="557.0" y="324.0">models.Batch_Full_Details</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="models.Patient_Information_Summary" target="models.Patient">
+      <point x="0.0" y="-27.0" />
+      <point x="380.0" y="293.0" />
+      <point x="276.0" y="293.0" />
+      <point x="29.0" y="27.0" />
+    </edge>
+    <edge source="models.Batch_Full_Details" target="models.Batch">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="137.0" />
+    </edge>
+    <edge source="models.Patient" target="models.Person">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="82.0" />
+    </edge>
+    <edge source="models.Item_Given" target="models.Item">
+      <point x="0.0" y="-60.0" />
+      <point x="0.0" y="49.0" />
+    </edge>
+    <edge source="models.Patient_Info" target="models.Patient">
+      <point x="0.0" y="-82.0" />
+      <point x="114.0" y="293.0" />
+      <point x="218.0" y="293.0" />
+      <point x="-29.0" y="27.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="356.0" y="344.0" />
+  <SelectedNodes>
+    <node>models.Batch</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

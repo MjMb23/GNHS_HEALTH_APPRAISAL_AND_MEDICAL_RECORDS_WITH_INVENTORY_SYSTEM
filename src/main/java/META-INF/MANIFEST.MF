@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: org.example.Main
+Class-Path: javafx-graphics-13.jar javafx-controls-13-win.jar javafx-fxm
+ l-13.jar javafx-fxml-13-win.jar mysql-connector-java-8.0.20.jar javafx-
+ base-13-win.jar javafx-controls-13.jar javafx-graphics-13-win.jar javaf
+ x-base-13.jar src.zip javafx-swt.jar javafx.web.jar javafx.base.jar jav
+ afx.fxml.jar javafx.media.jar javafx.swing.jar javafx.controls.jar java
+ fx.graphics.jar
+
