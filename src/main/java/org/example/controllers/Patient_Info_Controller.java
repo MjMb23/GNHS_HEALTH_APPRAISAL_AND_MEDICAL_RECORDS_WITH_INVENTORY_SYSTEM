@@ -119,6 +119,7 @@ public class Patient_Info_Controller implements Initializable {
 
     @FXML
     void addMedicalHistoryButtonClicked() {
+        
         if(!isUpdating()){
 
             if(!(medicalHistoryField.getText().isBlank())){
