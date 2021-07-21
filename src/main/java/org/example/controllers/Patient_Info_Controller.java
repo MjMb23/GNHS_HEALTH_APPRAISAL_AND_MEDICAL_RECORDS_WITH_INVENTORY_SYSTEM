@@ -1,6 +1,5 @@
 package org.example.controllers;
 
-import org.example.connection.ConnectionClass;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,15 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import org.example.connection.ConnectionClass;
 import org.example.models.History;
 import org.example.models.Notifications;
 import org.example.models.Patient_Info;
@@ -101,41 +96,41 @@ public class Patient_Info_Controller implements Initializable {
     @FXML
     private Button saveButton;
 
-    private int tempMedicalHistoryID=0;
-    private int tempVaccinationHistoryID=0;
-    private ObservableList<History> medicalHistory= FXCollections.observableArrayList();
-    private ObservableList<History> vaccinationHistory= FXCollections.observableArrayList();
-    private ConnectionClass connect,singleConnect;
+    private int tempMedicalHistoryID = 0;
+    private int tempVaccinationHistoryID = 0;
+    private final ObservableList<History> medicalHistory = FXCollections.observableArrayList();
+    private final ObservableList<History> vaccinationHistory = FXCollections.observableArrayList();
+    private ConnectionClass connect, singleConnect;
     private ResultSet rs;
     private int lastInsertID;
     ResultSet last_inserted_id;
-    ArrayList<TextField> fields=new ArrayList();
+    ArrayList<TextField> fields = new ArrayList();
 
     private int patientID;
 
     private boolean updating;
 
-    Dashboard_Controller dashboardController=new Dashboard_Controller();
+    Dashboard_Controller dashboardController = new Dashboard_Controller();
 
     @FXML
     void addMedicalHistoryButtonClicked() {
-        
-        if(!isUpdating()){
 
-            if(!(medicalHistoryField.getText().isBlank())){
+        if (!isUpdating()) {
+
+            if (!(medicalHistoryField.getText().isBlank())) {
                 ++tempMedicalHistoryID;
-                History history=new History();
+                History history = new History();
 
-                Button removeButton=new Button("Remove");
+                Button removeButton = new Button("Remove");
 
-                HBox buttonContainer=new HBox();
+                HBox buttonContainer = new HBox();
 
                 removeButton.setPrefWidth(80);
 
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
-                buttonContainer.setId(tempMedicalHistoryID+"");
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setId(tempMedicalHistoryID + "");
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
                 removeButton.getStyleClass().add("clearButtons");
 
                 buttonContainer.getChildren().addAll(removeButton);
@@ -143,9 +138,9 @@ public class Patient_Info_Controller implements Initializable {
                 removeButton.setOnAction(event -> {
                     int id = Integer.parseInt(removeButton.getParent().getId());
 
-                    for(Iterator<History> his=medicalHistory.iterator();his.hasNext();){
+                    for (Iterator<History> his = medicalHistory.iterator(); his.hasNext(); ) {
 
-                        History sample= his.next();
+                        History sample = his.next();
 
                         if (sample.getHistoryID() == id) {
                             his.remove();
@@ -180,15 +175,15 @@ public class Patient_Info_Controller implements Initializable {
                 }
             });
 
-        }else{
+        } else {
 
             medicalHistory.clear();
-            try{
-                connect=new ConnectionClass();
-                connect.insert(String.format("INSERT INTO gnhs_system_db.medical_history (history_description, patient_id) VALUES ('%s', '%d')",medicalHistoryField.getText(), getPatientID()));
+            try {
+                connect = new ConnectionClass();
+                connect.insert(String.format("INSERT INTO gnhs_system_db.medical_history (history_description, patient_id) VALUES ('%s', '%d')", medicalHistoryField.getText(), getPatientID()));
                 connect.close();
-            }catch (Exception e){
-                Notifications error=new Notifications("Error!",e.getMessage());
+            } catch (Exception e) {
+                Notifications error = new Notifications("Error!", e.getMessage());
                 error.showError();
             }
 
@@ -207,21 +202,21 @@ public class Patient_Info_Controller implements Initializable {
     @FXML
     void addVaccinationHistoryButtonClicked() {
 
-        if(!isUpdating()){
-            if(!(vaccinationHistoryField.getText().isBlank())){
+        if (!isUpdating()) {
+            if (!(vaccinationHistoryField.getText().isBlank())) {
                 ++tempVaccinationHistoryID;
-                History history=new History();
+                History history = new History();
 
-                Button removeButton=new Button("Remove");
+                Button removeButton = new Button("Remove");
 
-                HBox buttonContainer=new HBox();
+                HBox buttonContainer = new HBox();
 
                 removeButton.setPrefWidth(80);
 
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
-                buttonContainer.setId(tempVaccinationHistoryID+"");
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setId(tempVaccinationHistoryID + "");
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
                 removeButton.getStyleClass().add("clearButtons");
 
                 buttonContainer.getChildren().addAll(removeButton);
@@ -229,9 +224,9 @@ public class Patient_Info_Controller implements Initializable {
                 removeButton.setOnAction(event -> {
                     int id = Integer.parseInt(removeButton.getParent().getId());
 
-                    for(Iterator<History> vacHistory=vaccinationHistory.iterator();vacHistory.hasNext();){
+                    for (Iterator<History> vacHistory = vaccinationHistory.iterator(); vacHistory.hasNext(); ) {
 
-                        History sample= vacHistory.next();
+                        History sample = vacHistory.next();
 
                         if (sample.getHistoryID() == id) {
                             vacHistory.remove();
@@ -265,15 +260,15 @@ public class Patient_Info_Controller implements Initializable {
                     vaccinationHistoryField.requestFocus();
                 }
             });
-        }else {
+        } else {
 
             vaccinationHistory.clear();
-            try{
-                connect=new ConnectionClass();
-                connect.insert(String.format("INSERT INTO gnhs_system_db.vaccination_or_immunization_history (vaccination_description, patient_id) VALUES ('%s', '%d')",vaccinationHistoryField.getText(), getPatientID()));
+            try {
+                connect = new ConnectionClass();
+                connect.insert(String.format("INSERT INTO gnhs_system_db.vaccination_or_immunization_history (vaccination_description, patient_id) VALUES ('%s', '%d')", vaccinationHistoryField.getText(), getPatientID()));
                 connect.close();
-            }catch (Exception e){
-                Notifications error=new Notifications("Error!",e.getMessage());
+            } catch (Exception e) {
+                Notifications error = new Notifications("Error!", e.getMessage());
                 error.showError();
             }
 
@@ -301,20 +296,20 @@ public class Patient_Info_Controller implements Initializable {
     @FXML
     void medicalHistoryFieldEnterPressed() {
 
-        if(!(medicalHistoryField.getText().isBlank())){
+        if (!(medicalHistoryField.getText().isBlank())) {
             ++tempMedicalHistoryID;
-            History history=new History();
+            History history = new History();
 
-            Button removeButton=new Button("Remove");
+            Button removeButton = new Button("Remove");
 
-            HBox buttonContainer=new HBox();
+            HBox buttonContainer = new HBox();
 
             removeButton.setPrefWidth(80);
 
             buttonContainer.setAlignment(Pos.CENTER);
             buttonContainer.setSpacing(10.0);
-            buttonContainer.setId(tempMedicalHistoryID+"");
-            buttonContainer.setPadding(new Insets(10,10,10,10));
+            buttonContainer.setId(tempMedicalHistoryID + "");
+            buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
             buttonContainer.getChildren().addAll(removeButton);
             removeButton.getStyleClass().add("clearButtons");
@@ -322,9 +317,9 @@ public class Patient_Info_Controller implements Initializable {
             removeButton.setOnAction(event -> {
                 int id = Integer.parseInt(removeButton.getParent().getId());
 
-                for(Iterator<History> his=medicalHistory.iterator();his.hasNext();){
+                for (Iterator<History> his = medicalHistory.iterator(); his.hasNext(); ) {
 
-                    History sample= his.next();
+                    History sample = his.next();
 
                     if (sample.getHistoryID() == id) {
                         his.remove();
@@ -365,11 +360,11 @@ public class Patient_Info_Controller implements Initializable {
     @FXML
     void saveButtonClicked() {
 
-        if(!isUpdating()){
+        if (!isUpdating()) {
             addPatientInfo();
 
             clear();
-        }else{
+        } else {
             updatePatient(getPatientID());
             System.out.println();
         }
@@ -380,20 +375,20 @@ public class Patient_Info_Controller implements Initializable {
 
     @FXML
     void vaccinationHistoryFieldClicked() {
-        if(!(vaccinationHistoryField.getText().isBlank())){
+        if (!(vaccinationHistoryField.getText().isBlank())) {
             ++tempVaccinationHistoryID;
-            History history=new History();
+            History history = new History();
 
-            Button removeButton=new Button("Remove");
+            Button removeButton = new Button("Remove");
 
-            HBox buttonContainer=new HBox();
+            HBox buttonContainer = new HBox();
 
             removeButton.setPrefWidth(80);
 
             buttonContainer.setAlignment(Pos.CENTER);
             buttonContainer.setSpacing(10.0);
-            buttonContainer.setId(tempVaccinationHistoryID+"");
-            buttonContainer.setPadding(new Insets(10,10,10,10));
+            buttonContainer.setId(tempVaccinationHistoryID + "");
+            buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
             removeButton.getStyleClass().add("clearButtons");
 
@@ -402,9 +397,9 @@ public class Patient_Info_Controller implements Initializable {
             removeButton.setOnAction(event -> {
                 int id = Integer.parseInt(removeButton.getParent().getId());
 
-                for(Iterator<History> vacHistory=vaccinationHistory.iterator();vacHistory.hasNext();){
+                for (Iterator<History> vacHistory = vaccinationHistory.iterator(); vacHistory.hasNext(); ) {
 
-                    History sample= vacHistory.next();
+                    History sample = vacHistory.next();
 
                     if (sample.getHistoryID() == id) {
                         vacHistory.remove();
@@ -445,9 +440,9 @@ public class Patient_Info_Controller implements Initializable {
         computeAge();
     }
 
-    private void updatePatient(int id){
+    private void updatePatient(int id) {
 
-        Patient_Info patient=new Patient_Info();
+        Patient_Info patient = new Patient_Info();
         patient.setFirstname(firstnameField.getText());
         patient.setLastname(lastnameField.getText());
         patient.setMiddleName(middleNameField.getText());
@@ -458,46 +453,46 @@ public class Patient_Info_Controller implements Initializable {
         patient.setWeight(Double.parseDouble(weightField.getText()));
         patient.setCurrentCondition(currentConditionField.getText());
 
-        try{
+        try {
 
-            int affectedRows=0;
-            connect=new ConnectionClass();
-            affectedRows=connect.update(String.format("UPDATE `gnhs_system_db`.`patients` " +
-                    "SET `first_name` = '%s', `last_name` = '%s', `middle_name` = '%s', `sex` = '%s', " +
-                    " `birthdate` = '"+patient.getBirthdate()+"', `age` = '%d', `weight` = '%f', `height` = '%f', `bmi` = '%f', " +
-                    " `current_condition` = '%s' WHERE (`patient_id` = '%d');"
-            ,patient.getFirstname(),patient.getLastname(),patient.getMiddleName(),patient.getSex(),
-             patient.getAge(),patient.getWeight(),patient.getHeight(),patient.getBMI(), patient.getCurrentCondition(),id));
+            int affectedRows = 0;
+            connect = new ConnectionClass();
+            affectedRows = connect.update(String.format("UPDATE `gnhs_system_db`.`patients` " +
+                            "SET `first_name` = '%s', `last_name` = '%s', `middle_name` = '%s', `sex` = '%s', " +
+                            " `birthdate` = '" + patient.getBirthdate() + "', `age` = '%d', `weight` = '%f', `height` = '%f', `bmi` = '%f', " +
+                            " `current_condition` = '%s' WHERE (`patient_id` = '%d');"
+                    , patient.getFirstname(), patient.getLastname(), patient.getMiddleName(), patient.getSex(),
+                    patient.getAge(), patient.getWeight(), patient.getHeight(), patient.getBMI(), patient.getCurrentCondition(), id));
 
 
-            if(affectedRows>0){
-                Notifications success=new Notifications("Success!", "The patient record was successfully updated.");
+            if (affectedRows > 0) {
+                Notifications success = new Notifications("Success!", "The patient record was successfully updated.");
                 success.showInformation();
             }
 
             connect.close();
-        }catch (Exception e){
-            Notifications error=new Notifications("Error!",e.getMessage());
+        } catch (Exception e) {
+            Notifications error = new Notifications("Error!", e.getMessage());
             error.showError();
         }
     }
 
-    private void populateHistoryTableForUpdate(){
-        try{
-            connect =new ConnectionClass();
-            rs=connect.select(String.format("SELECT * FROM gnhs_system_db.medical_history WHERE patient_id = '%d'",getPatientID()));
+    private void populateHistoryTableForUpdate() {
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select(String.format("SELECT * FROM gnhs_system_db.medical_history WHERE patient_id = '%d'", getPatientID()));
 
 
-            while (rs.next()){
-                int medID=rs.getInt("medical_history_id");
+            while (rs.next()) {
+                int medID = rs.getInt("medical_history_id");
 
-                Button removeButton=new Button("Remove");
-                HBox buttonContainer=new HBox();
+                Button removeButton = new Button("Remove");
+                HBox buttonContainer = new HBox();
                 removeButton.setPrefWidth(80);
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
-                buttonContainer.setId(medID+"");
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setId(medID + "");
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
                 buttonContainer.getChildren().addAll(removeButton);
                 removeButton.getStyleClass().add("clearButtons");
 
@@ -505,17 +500,17 @@ public class Patient_Info_Controller implements Initializable {
                 removeButton.setOnAction(event -> {
                     int id = Integer.parseInt(removeButton.getParent().getId());
 
-                    try{
-                        connect=new ConnectionClass();
-                        connect.delete(String.format("DELETE FROM gnhs_system_db.medical_history WHERE (medical_history_id = '%d') and (patient_id = '%d')",id, getPatientID()));
+                    try {
+                        connect = new ConnectionClass();
+                        connect.delete(String.format("DELETE FROM gnhs_system_db.medical_history WHERE (medical_history_id = '%d') and (patient_id = '%d')", id, getPatientID()));
                         connect.close();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    for(Iterator<History> his=medicalHistory.iterator();his.hasNext();){
+                    for (Iterator<History> his = medicalHistory.iterator(); his.hasNext(); ) {
 
-                        History sample= his.next();
+                        History sample = his.next();
 
                         if (sample.getHistoryID() == id) {
                             his.remove();
@@ -539,32 +534,32 @@ public class Patient_Info_Controller implements Initializable {
 
                 });
 
-                History medHis=new History();
+                History medHis = new History();
                 medHis.setHistoryID(rs.getInt("medical_history_id"));
                 medHis.setHistoryDescription(rs.getString("history_description"));
                 medHis.setActions(buttonContainer);
                 medicalHistory.add(medHis);
             }
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void populateVaccinationTableForUpdate(){
-        try{
-            connect =new ConnectionClass();
-            rs=connect.select(String.format("SELECT * FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id = '%d'",getPatientID()));
+    private void populateVaccinationTableForUpdate() {
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select(String.format("SELECT * FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id = '%d'", getPatientID()));
 
-            while (rs.next()){
-                int hisID=rs.getInt("id");
-                Button removeButton=new Button("Remove");
-                HBox buttonContainer=new HBox();
+            while (rs.next()) {
+                int hisID = rs.getInt("id");
+                Button removeButton = new Button("Remove");
+                HBox buttonContainer = new HBox();
                 removeButton.setPrefWidth(80);
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
-                buttonContainer.setId(hisID+"");
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setId(hisID + "");
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
                 removeButton.getStyleClass().add("clearButtons");
                 buttonContainer.getChildren().add(removeButton);
@@ -572,16 +567,16 @@ public class Patient_Info_Controller implements Initializable {
                 removeButton.setOnAction(event -> {
                     int id = Integer.parseInt(removeButton.getParent().getId());
 
-                    try{
-                        connect=new ConnectionClass();
-                        connect.delete(String.format("DELETE FROM gnhs_system_db.vaccination_or_immunization_history WHERE (id = '%d') and (patient_id = '%d')",id, getPatientID()));
+                    try {
+                        connect = new ConnectionClass();
+                        connect.delete(String.format("DELETE FROM gnhs_system_db.vaccination_or_immunization_history WHERE (id = '%d') and (patient_id = '%d')", id, getPatientID()));
                         connect.close();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    for(Iterator<History> vacHistory=vaccinationHistory.iterator();vacHistory.hasNext();){
-                        History sample= vacHistory.next();
+                    for (Iterator<History> vacHistory = vaccinationHistory.iterator(); vacHistory.hasNext(); ) {
+                        History sample = vacHistory.next();
 
                         if (sample.getHistoryID() == id) {
                             vacHistory.remove();
@@ -602,7 +597,7 @@ public class Patient_Info_Controller implements Initializable {
                 });
 
 
-                History vacHis=new History();
+                History vacHis = new History();
                 vacHis.setHistoryID(rs.getInt("id"));
                 vacHis.setHistoryDescription(rs.getString("vaccination_description"));
                 vacHis.setActions(buttonContainer);
@@ -610,51 +605,51 @@ public class Patient_Info_Controller implements Initializable {
             }
 
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void computeBMI(){
+    private void computeBMI() {
 
-        String BMIInterpretation="";
-        double height=0;
-        double weight=0;
+        String BMIInterpretation = "";
+        double height = 0;
+        double weight = 0;
 
-        if(weightField.getText().isBlank()){
-            weight=Double.parseDouble(weightField.getPromptText());
-        }else{
-            weight=Double.parseDouble(weightField.getText());
+        if (weightField.getText().isBlank()) {
+            weight = Double.parseDouble(weightField.getPromptText());
+        } else {
+            weight = Double.parseDouble(weightField.getText());
         }
 
-        if(heightField.getText().isBlank()){
-            height=Double.parseDouble(heightField.getPromptText());
-        }else{
-            height=Double.parseDouble(heightField.getText());
+        if (heightField.getText().isBlank()) {
+            height = Double.parseDouble(heightField.getPromptText());
+        } else {
+            height = Double.parseDouble(heightField.getText());
         }
 
-        double heightInMeter=height/100;
-        double heightInMeterSquared=Math.pow(heightInMeter,2);
+        double heightInMeter = height / 100;
+        double heightInMeterSquared = Math.pow(heightInMeter, 2);
 
-            double BMI= weight/heightInMeterSquared;
-            BMIField.setText(String.format("%1.2f",BMI));
+        double BMI = weight / heightInMeterSquared;
+        BMIField.setText(String.format("%1.2f", BMI));
 
-        if(BMI>=0&&BMI<=16.0){
-            BMIInterpretation="Severely underweight";
-        }else if(BMI>=16.1&&BMI<=18.5){
-            BMIInterpretation="Underweight";
-        }else if(BMI>=18.6&&BMI<=25){
-            BMIInterpretation="Normal";
-        }else if(BMI>=25.1&&BMI<=30){
-            BMIInterpretation="Overweight";
-        }else if(BMI>=30.1&&BMI<=35){
-            BMIInterpretation="Obese";
+        if (BMI >= 0 && BMI <= 16.0) {
+            BMIInterpretation = "Severely underweight";
+        } else if (BMI >= 16.1 && BMI <= 18.5) {
+            BMIInterpretation = "Underweight";
+        } else if (BMI >= 18.6 && BMI <= 25) {
+            BMIInterpretation = "Normal";
+        } else if (BMI >= 25.1 && BMI <= 30) {
+            BMIInterpretation = "Overweight";
+        } else if (BMI >= 30.1 && BMI <= 35) {
+            BMIInterpretation = "Obese";
         }
 
         BMIInterpretationField.setText(BMIInterpretation);
     }
 
-    private void populateMedicalHistoryTable(){
+    private void populateMedicalHistoryTable() {
         medicalHistoryDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("historyDescription"));
         medicalHistoryActionColumn.setCellValueFactory(new PropertyValueFactory<>("actions"));
         medicalHistoryTable.setItems(medicalHistory);
@@ -662,7 +657,7 @@ public class Patient_Info_Controller implements Initializable {
         medicalHistoryField.setText("");
     }
 
-    private void populateVaccineHistoryTable(){
+    private void populateVaccineHistoryTable() {
 
 
         vaccinationHistoryDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("historyDescription"));
@@ -672,27 +667,27 @@ public class Patient_Info_Controller implements Initializable {
         vaccinationHistoryField.setText("");
     }
 
-    private void addPatient(){
+    private void addPatient() {
 
-        String firstname=firstnameField.getText();
-        String lastName=lastnameField.getText();
-        String middleName=middleNameField.getText();
-        String sex=sexChoiceBox.getValue();
-        LocalDate birthdate=birthdatePicker.getValue();
-        double weight=Double.parseDouble(weightField.getText());
-        double height=Double.parseDouble(heightField.getText());
-        double BMI =Double.parseDouble(BMIField.getText());
-        int age= Integer.parseInt(ageField.getText());
+        String firstname = firstnameField.getText();
+        String lastName = lastnameField.getText();
+        String middleName = middleNameField.getText();
+        String sex = sexChoiceBox.getValue();
+        LocalDate birthdate = birthdatePicker.getValue();
+        double weight = Double.parseDouble(weightField.getText());
+        double height = Double.parseDouble(heightField.getText());
+        double BMI = Double.parseDouble(BMIField.getText());
+        int age = Integer.parseInt(ageField.getText());
 
-        try{
+        try {
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void populateSexChoices(){
-        ObservableList<String> sexChoices=FXCollections.observableArrayList();
+    private void populateSexChoices() {
+        ObservableList<String> sexChoices = FXCollections.observableArrayList();
         sexChoices.add("Male");
         sexChoices.add("Female");
 
@@ -701,88 +696,88 @@ public class Patient_Info_Controller implements Initializable {
     }
 
     //Fix accuracy
-    private void computeAge(){
-        LocalDate dateNow=LocalDate.now();
-        LocalDate birthdate=birthdatePicker.getValue();
-        int age=0;
+    private void computeAge() {
+        LocalDate dateNow = LocalDate.now();
+        LocalDate birthdate = birthdatePicker.getValue();
+        int age = 0;
 
         //System.out.println(birthdatePicker.getValue());
 
-        try{
-            while(birthdate.isBefore(dateNow)){
-                birthdate=birthdate.plusYears(1);
+        try {
+            while (birthdate.isBefore(dateNow)) {
+                birthdate = birthdate.plusYears(1);
 
-                if(birthdate.isBefore(dateNow)||birthdate.isEqual(dateNow)){
+                if (birthdate.isBefore(dateNow) || birthdate.isEqual(dateNow)) {
                     age++;
                 }
             }
-            ageField.setText(age+"");
-        }catch (Exception e){
+            ageField.setText(age + "");
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    private void addPatientInfo(){
+    private void addPatientInfo() {
 
-        boolean insert=true;
-        Patient_Info patient=new Patient_Info();
-        try{
+        boolean insert = true;
+        Patient_Info patient = new Patient_Info();
+        try {
             patient.setFirstname(firstnameField.getText());
             patient.setLastname(lastnameField.getText());
             patient.setMiddleName(middleNameField.getText());
             patient.setSex(sexChoiceBox.getValue());
             patient.setBirthdate(birthdatePicker.getValue());
-            if(ageField.getText().isBlank()){
+            if (ageField.getText().isBlank()) {
                 patient.setAge(Integer.parseInt(ageField.getPromptText()));
-            }else{
+            } else {
                 patient.setAge(Integer.parseInt(ageField.getText()));
             }
-            if(heightField.getText().isBlank()){
+            if (heightField.getText().isBlank()) {
                 patient.setHeight(Double.parseDouble(heightField.getPromptText()));
-            }else{
+            } else {
                 patient.setHeight(Double.parseDouble(heightField.getText()));
             }
-            if(weightField.getText().isBlank()){
+            if (weightField.getText().isBlank()) {
                 patient.setWeight(Double.parseDouble(weightField.getPromptText()));
-            }else {
+            } else {
                 patient.setWeight(Double.parseDouble(weightField.getText()));
             }
-            if(BMIField.getText().isBlank()){
+            if (BMIField.getText().isBlank()) {
                 patient.setBMI(Double.parseDouble(BMIField.getPromptText()));
-            }else{
+            } else {
                 patient.setBMI(Double.parseDouble(BMIField.getText()));
             }
             patient.setCurrentCondition(currentConditionField.getText());
-        }catch (Exception e){
-            Notifications error=new Notifications("Error!","Invalid input or empty field.");
+        } catch (Exception e) {
+            Notifications error = new Notifications("Error!", "Invalid input or empty field.");
             error.showError();
-            insert=false;
+            insert = false;
         }
 
-        if(insert){
+        if (insert) {
             try {
-                int affectedRows=0;
+                int affectedRows = 0;
 
-                singleConnect=new ConnectionClass();
+                singleConnect = new ConnectionClass();
 
-                affectedRows=singleConnect.insert(String.format("INSERT INTO `gnhs_system_db`.`patients` (`first_name`, `last_name`, `middle_name`, `sex`, `birthdate`, `age`, `weight`, `height`, `bmi`, `current_condition`) " +
-                                "VALUES ('%s', '%s', '%s', '%s', '"+patient.getBirthdate()+"', '%d', '%f', '%f', '%f', '%s')"
-                        ,patient.getFirstname(), patient.getLastname(), patient.getMiddleName(), patient.getSex(),patient.getAge(),patient.getWeight(),patient.getHeight(),patient.getBMI(),patient.getCurrentCondition()));
-                last_inserted_id=singleConnect.select("SELECT last_insert_id() as last_inserted_id");
+                affectedRows = singleConnect.insert(String.format("INSERT INTO `gnhs_system_db`.`patients` (`first_name`, `last_name`, `middle_name`, `sex`, `birthdate`, `age`, `weight`, `height`, `bmi`, `current_condition`) " +
+                                "VALUES ('%s', '%s', '%s', '%s', '" + patient.getBirthdate() + "', '%d', '%f', '%f', '%f', '%s')"
+                        , patient.getFirstname(), patient.getLastname(), patient.getMiddleName(), patient.getSex(), patient.getAge(), patient.getWeight(), patient.getHeight(), patient.getBMI(), patient.getCurrentCondition()));
+                last_inserted_id = singleConnect.select("SELECT last_insert_id() as last_inserted_id");
 
-                while (last_inserted_id.next()){
-                    lastInsertID=last_inserted_id.getInt("last_inserted_id");
+                while (last_inserted_id.next()) {
+                    lastInsertID = last_inserted_id.getInt("last_inserted_id");
                 }
 
-                if(affectedRows>0){
-                    Notifications success=new Notifications("Success!", "The patient was added successfully.");
+                if (affectedRows > 0) {
+                    Notifications success = new Notifications("Success!", "The patient was added successfully.");
                     success.showInformation();
                 }
 
                 singleConnect.close();
             } catch (Exception e) {
-                Notifications error=new Notifications("Error!",e.getMessage());
+                Notifications error = new Notifications("Error!", e.getMessage());
                 error.showError();
             }
         }
@@ -794,35 +789,35 @@ public class Patient_Info_Controller implements Initializable {
 
     }
 
-    private void addMedicationHistory(int id){
+    private void addMedicationHistory(int id) {
 
-        if(!(medicalHistory.isEmpty())){
-            for (History medHis:medicalHistory) {
+        if (!(medicalHistory.isEmpty())) {
+            for (History medHis : medicalHistory) {
                 try {
-                    connect=new ConnectionClass();
-                    connect.insert(String.format("INSERT INTO `gnhs_system_db`.`medical_history` (`history_description`, `patient_id`) VALUES ('%s', '%d')",medHis.getHistoryDescription(),id));
+                    connect = new ConnectionClass();
+                    connect.insert(String.format("INSERT INTO `gnhs_system_db`.`medical_history` (`history_description`, `patient_id`) VALUES ('%s', '%d')", medHis.getHistoryDescription(), id));
 
                     connect.close();
                 } catch (Exception e) {
-                    Notifications error=new Notifications("Error!",e.getMessage());
+                    Notifications error = new Notifications("Error!", e.getMessage());
                     error.showError();
                 }
             }
         }
     }
 
-    private void addVaccinationHistory(int id){
+    private void addVaccinationHistory(int id) {
 
-        if(!(vaccinationHistory.isEmpty())){
-            for (History vacHis:vaccinationHistory) {
+        if (!(vaccinationHistory.isEmpty())) {
+            for (History vacHis : vaccinationHistory) {
 
                 try {
-                    connect=new ConnectionClass();
-                    connect.insert(String.format("INSERT INTO `gnhs_system_db`.`vaccination_or_immunization_history` (`vaccination_description`, `patient_id`) VALUES ('%s', '%d')",vacHis.getHistoryDescription(),id));
+                    connect = new ConnectionClass();
+                    connect.insert(String.format("INSERT INTO `gnhs_system_db`.`vaccination_or_immunization_history` (`vaccination_description`, `patient_id`) VALUES ('%s', '%d')", vacHis.getHistoryDescription(), id));
 
                     connect.close();
                 } catch (Exception e) {
-                    Notifications error=new Notifications("Error!",e.getMessage());
+                    Notifications error = new Notifications("Error!", e.getMessage());
                     error.showError();
                 }
 
@@ -830,7 +825,7 @@ public class Patient_Info_Controller implements Initializable {
         }
     }
 
-    private void clear(){
+    private void clear() {
         populateSexChoices();
 
         fields.add(firstnameField);
@@ -844,13 +839,13 @@ public class Patient_Info_Controller implements Initializable {
         fields.add(medicalHistoryField);
         fields.add(vaccinationHistoryField);
 
-        for (TextField field: fields) {
+        for (TextField field : fields) {
             field.clear();
         }
 
-        try{
+        try {
             birthdatePicker.setValue(null);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         medicalHistory.clear();
@@ -859,28 +854,29 @@ public class Patient_Info_Controller implements Initializable {
         populateVaccineHistoryTable();
     }
 
-    public void setPatientID(int patientID){
-        this.patientID=patientID;
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
     }
 
-    public int getPatientID(){
+    public int getPatientID() {
         return patientID;
     }
-    public void fetchInformation(){
 
-        if(isUpdating()){
-            ObservableList<History> vaccine=FXCollections.observableArrayList();
-            ObservableList<History> medical=FXCollections.observableArrayList();
-            Patient_Info patient=new Patient_Info();
-            String BMIInterpretation="";
+    public void fetchInformation() {
+
+        if (isUpdating()) {
+            ObservableList<History> vaccine = FXCollections.observableArrayList();
+            ObservableList<History> medical = FXCollections.observableArrayList();
+            Patient_Info patient = new Patient_Info();
+            String BMIInterpretation = "";
 
             try {
-                connect= new ConnectionClass();
-                rs=connect.select(String.format("SELECT * FROM gnhs_system_db.patients WHERE patient_id='%d'",getPatientID()));
-                vacHistory=connect.select(String.format("SELECT * FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id = '%d'",getPatientID()));
-                medHistory=connect.select(String.format("SELECT * FROM gnhs_system_db.medical_history WHERE patient_id = '%d'",getPatientID()));
+                connect = new ConnectionClass();
+                rs = connect.select(String.format("SELECT * FROM gnhs_system_db.patients WHERE patient_id='%d'", getPatientID()));
+                vacHistory = connect.select(String.format("SELECT * FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id = '%d'", getPatientID()));
+                medHistory = connect.select(String.format("SELECT * FROM gnhs_system_db.medical_history WHERE patient_id = '%d'", getPatientID()));
 
-                while (rs.next()){
+                while (rs.next()) {
                     patient.setPatientID(rs.getInt("patient_id"));
                     patient.setFirstname(rs.getString("first_name"));
                     patient.setLastname(rs.getString("last_name"));
@@ -894,31 +890,31 @@ public class Patient_Info_Controller implements Initializable {
                     patient.setCurrentCondition(rs.getString("current_condition"));
                 }
 
-                while (vacHistory.next()){
-                    int hisID=vacHistory.getInt("id");
+                while (vacHistory.next()) {
+                    int hisID = vacHistory.getInt("id");
 
-                    Button removeButton=new Button("Remove");
-                    HBox buttonContainer=new HBox();
+                    Button removeButton = new Button("Remove");
+                    HBox buttonContainer = new HBox();
                     removeButton.setPrefWidth(80);
                     buttonContainer.setAlignment(Pos.CENTER);
                     buttonContainer.setSpacing(10.0);
-                    buttonContainer.setId(hisID+"");
-                    buttonContainer.setPadding(new Insets(10,10,10,10));
+                    buttonContainer.setId(hisID + "");
+                    buttonContainer.setPadding(new Insets(10, 10, 10, 10));
                     removeButton.getStyleClass().add("clearButtons");
                     buttonContainer.getChildren().addAll(removeButton);
                     removeButton.setOnAction(event -> {
                         int id = Integer.parseInt(removeButton.getParent().getId());
 
-                        try{
-                            connect=new ConnectionClass();
-                            connect.delete(String.format("DELETE FROM gnhs_system_db.vaccination_or_immunization_history WHERE (id = '%d') and (patient_id = '%d')",id, getPatientID()));
+                        try {
+                            connect = new ConnectionClass();
+                            connect.delete(String.format("DELETE FROM gnhs_system_db.vaccination_or_immunization_history WHERE (id = '%d') and (patient_id = '%d')", id, getPatientID()));
                             connect.close();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        for(Iterator<History> vacHistory=vaccinationHistory.iterator();vacHistory.hasNext();){
-                            History sample= vacHistory.next();
+                        for (Iterator<History> vacHistory = vaccinationHistory.iterator(); vacHistory.hasNext(); ) {
+                            History sample = vacHistory.next();
 
                             if (sample.getHistoryID() == id) {
                                 vacHistory.remove();
@@ -938,7 +934,7 @@ public class Patient_Info_Controller implements Initializable {
 
                     });
 
-                    History vacHis=new History();
+                    History vacHis = new History();
                     vacHis.setHistoryID(vacHistory.getInt("id"));
                     vacHis.setHistoryDescription(vacHistory.getString("vaccination_description"));
                     vacHis.setActions(buttonContainer);
@@ -946,16 +942,16 @@ public class Patient_Info_Controller implements Initializable {
                     vaccinationHistory.add(vacHis);
                 }
 
-                while (medHistory.next()){
-                    int medID=medHistory.getInt("medical_history_id");
+                while (medHistory.next()) {
+                    int medID = medHistory.getInt("medical_history_id");
 
-                    Button removeButton=new Button("Remove");
-                    HBox buttonContainer=new HBox();
+                    Button removeButton = new Button("Remove");
+                    HBox buttonContainer = new HBox();
                     removeButton.setPrefWidth(80);
                     buttonContainer.setAlignment(Pos.CENTER);
                     buttonContainer.setSpacing(10.0);
-                    buttonContainer.setId(medID+"");
-                    buttonContainer.setPadding(new Insets(10,10,10,10));
+                    buttonContainer.setId(medID + "");
+                    buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
                     removeButton.getStyleClass().add("clearButtons");
                     buttonContainer.getChildren().addAll(removeButton);
@@ -965,17 +961,17 @@ public class Patient_Info_Controller implements Initializable {
 
                         int id = Integer.parseInt(removeButton.getParent().getId());
 
-                        try{
-                            connect=new ConnectionClass();
-                            connect.delete(String.format("DELETE FROM gnhs_system_db.medical_history WHERE (medical_history_id = '%d') and (patient_id = '%d')",id, getPatientID()));
+                        try {
+                            connect = new ConnectionClass();
+                            connect.delete(String.format("DELETE FROM gnhs_system_db.medical_history WHERE (medical_history_id = '%d') and (patient_id = '%d')", id, getPatientID()));
                             connect.close();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        for(Iterator<History> his=medicalHistory.iterator();his.hasNext();){
+                        for (Iterator<History> his = medicalHistory.iterator(); his.hasNext(); ) {
 
-                            History sample= his.next();
+                            History sample = his.next();
 
                             if (sample.getHistoryID() == id) {
                                 his.remove();
@@ -998,7 +994,7 @@ public class Patient_Info_Controller implements Initializable {
 
                     });
 
-                    History medHis=new History();
+                    History medHis = new History();
                     medHis.setHistoryID(medHistory.getInt("medical_history_id"));
                     medHis.setHistoryDescription(medHistory.getString("history_description"));
                     medHis.setActions(buttonContainer);
@@ -1015,10 +1011,10 @@ public class Patient_Info_Controller implements Initializable {
             middleNameField.setText(patient.getMiddleName());
             sexChoiceBox.setValue(patient.getSex());
             birthdatePicker.setValue(patient.getBirthdate());
-            ageField.setText(patient.getAge()+"");
-            heightField.setText(patient.getHeight()+"");
-            weightField.setText(patient.getWeight()+"");
-            BMIField.setText(patient.getBMI()+"");
+            ageField.setText(patient.getAge() + "");
+            heightField.setText(patient.getHeight() + "");
+            weightField.setText(patient.getWeight() + "");
+            BMIField.setText(patient.getBMI() + "");
             currentConditionField.setText(patient.getCurrentCondition());
 
             /*0 to 16.0 = Severely underweight
@@ -1027,18 +1023,18 @@ public class Patient_Info_Controller implements Initializable {
             25.1 to 30 = Overweight
             30.1 to 35 = Obese*/
 
-            double BMI=patient.getBMI();
+            double BMI = patient.getBMI();
 
-            if(BMI>=0&&BMI<=16.0){
-                BMIInterpretation="Severely underweight";
-            }else if(BMI>=16.1&&BMI<=18.5){
-                BMIInterpretation="Underweight";
-            }else if(BMI>=18.6&&BMI<=25){
-                BMIInterpretation="Normal";
-            }else if(BMI>=25.1&&BMI<=30){
-                BMIInterpretation="Overweight";
-            }else if(BMI>=30.1&&BMI<=35){
-                BMIInterpretation="Obese";
+            if (BMI >= 0 && BMI <= 16.0) {
+                BMIInterpretation = "Severely underweight";
+            } else if (BMI >= 16.1 && BMI <= 18.5) {
+                BMIInterpretation = "Underweight";
+            } else if (BMI >= 18.6 && BMI <= 25) {
+                BMIInterpretation = "Normal";
+            } else if (BMI >= 25.1 && BMI <= 30) {
+                BMIInterpretation = "Overweight";
+            } else if (BMI >= 30.1 && BMI <= 35) {
+                BMIInterpretation = "Obese";
             }
 
             BMIInterpretationField.setText(BMIInterpretation);
@@ -1061,8 +1057,8 @@ public class Patient_Info_Controller implements Initializable {
     private ResultSet vacHistory, medHistory;
 
 
-    public void setDashboardController(Dashboard_Controller controller){
-        dashboardController=controller;
+    public void setDashboardController(Dashboard_Controller controller) {
+        dashboardController = controller;
     }
 
     @Override

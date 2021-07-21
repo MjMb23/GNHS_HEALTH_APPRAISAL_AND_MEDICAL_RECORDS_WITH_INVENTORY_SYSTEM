@@ -1,6 +1,5 @@
 package org.example.controllers;
 
-import org.example.connection.ConnectionClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.connection.ConnectionClass;
 import org.example.models.Batch;
 import org.example.models.Item_Summary;
 import org.example.models.Notifications;
@@ -83,7 +83,7 @@ public class Dashboard_Controller implements Initializable {
     void createItemButtonClicked(ActionEvent event) {
 
 
-        try{
+        try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Inventory_Records_Window.fxml"));
             Parent home = loader.load();
@@ -99,53 +99,54 @@ public class Dashboard_Controller implements Initializable {
             window.setScene(scene2);
             window.show();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     void itemFilterComboboxChanged() {
-        populateItemSummaryTable(itemFilterCombobox.getValue(),itemField.getText());
+        populateItemSummaryTable(itemFilterCombobox.getValue(), itemField.getText());
     }
 
     @FXML
     void itemFieldKeyReleased() {
-        populateItemSummaryTable(itemFilterCombobox.getValue(),itemField.getText());
+        populateItemSummaryTable(itemFilterCombobox.getValue(), itemField.getText());
     }
 
     //INVENTORY METHODS
     ConnectionClass connect;
     ObservableList<Item_Summary> item_summary;
-    ResultSet result,rs;
+    ResultSet result, rs;
 
     private int selectedPatientID;
     Refill_Window_Controller refillController;
-    public void populateItemSummaryTable(String filter, String value){
 
-        item_summary=FXCollections.observableArrayList();
+    public void populateItemSummaryTable(String filter, String value) {
+
+        item_summary = FXCollections.observableArrayList();
         int id;
 
         try {
-            connect=new ConnectionClass();
-            if(filter.equals("All")){
-                result=connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items ORDER BY item_name ASC; " );
-            }else if(filter.equals("Item name")){
-                result=connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items WHERE item_name like '%"+value+"%' ORDER BY item_name ASC; " );
-            }else if(filter.equals("Item type")){
-                result=connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items WHERE item_type like '%"+value+"%' ORDER BY item_name ASC; " );
+            connect = new ConnectionClass();
+            if (filter.equals("All")) {
+                result = connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items ORDER BY item_name ASC; ");
+            } else if (filter.equals("Item name")) {
+                result = connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items WHERE item_name like '%" + value + "%' ORDER BY item_name ASC; ");
+            } else if (filter.equals("Item type")) {
+                result = connect.select("SELECT items.item_id, items.item_name, items.item_type FROM gnhs_system_db.items WHERE item_type like '%" + value + "%' ORDER BY item_name ASC; ");
             }
-            while (result.next()){
-                id=result.getInt("item_id");
+            while (result.next()) {
+                id = result.getInt("item_id");
 
-                Button refill=new Button("Refill");
-                Button view=new Button("Details");
+                Button refill = new Button("Refill");
+                Button view = new Button("Details");
 
                 refill.getStyleClass().add("actionButtons");
                 view.getStyleClass().add("saveButtons");
 
-                HBox buttonContainer=new HBox();
-                buttonContainer.setId(id+"");
+                HBox buttonContainer = new HBox();
+                buttonContainer.setId(id + "");
 
                 view.setPrefWidth(100);
                 refill.setPrefWidth(100);
@@ -153,15 +154,16 @@ public class Dashboard_Controller implements Initializable {
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
 
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
-                buttonContainer.getChildren().addAll(refill,view);
+                buttonContainer.getChildren().addAll(refill, view);
 
                 refill.setOnAction(new EventHandler<ActionEvent>() {
 
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(refill.getParent().getId());
-                        try{
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(refill.getParent().getId());
+                        try {
 
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Refill_Window.fxml"));
                             Parent home = loader.load();
@@ -169,7 +171,7 @@ public class Dashboard_Controller implements Initializable {
                             Refill_Window_Controller refillController = loader.getController();
                             refillController.setDashboardController(Dashboard_Controller.this);
 
-                            Refill_Window_Controller refillItem= loader.getController();
+                            Refill_Window_Controller refillItem = loader.getController();
                             refillItem.setItemCombobox(containerID);
                             refillItem.itemSelectionChanged();
 
@@ -181,17 +183,18 @@ public class Dashboard_Controller implements Initializable {
                             window.setScene(scene2);
                             window.show();
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
 
                 view.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(view.getParent().getId());
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(view.getParent().getId());
 
-                        try{
+                        try {
 
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Item_Details_Window.fxml"));
                             Parent home = loader.load();
@@ -199,7 +202,7 @@ public class Dashboard_Controller implements Initializable {
                             Item_Details_Controller itemDetailsController = loader.getController();
                             itemDetailsController.setDashboardController(Dashboard_Controller.this);
 
-                            Item_Details_Controller itemDetails= loader.getController();
+                            Item_Details_Controller itemDetails = loader.getController();
                             itemDetails.setItemCombobox(containerID);
                             itemDetails.itemComboboxSelectionChanged();
                             //itemDetails.populateItemFilterComboBox();
@@ -214,23 +217,23 @@ public class Dashboard_Controller implements Initializable {
                             window.setScene(scene2);
                             window.show();
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
 
-                Batch batch=getValues(id);
-                int quantity=batch.getQuantity();
-                String unit=batch.getUnit();
-                int dispensed=batch.getDispensed();
-                int available=batch.getRemaining();
+                Batch batch = getValues(id);
+                int quantity = batch.getQuantity();
+                String unit = batch.getUnit();
+                int dispensed = batch.getDispensed();
+                int available = batch.getRemaining();
 
-                item_summary.addAll(new Item_Summary(id, result.getString("item_name"),result.getString("item_type"),
-                                    quantity,unit,dispensed, available, buttonContainer));
+                item_summary.addAll(new Item_Summary(id, result.getString("item_name"), result.getString("item_type"),
+                        quantity, unit, dispensed, available, buttonContainer));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -246,36 +249,36 @@ public class Dashboard_Controller implements Initializable {
 
     }
 
-    private Batch getValues(int id){
+    private Batch getValues(int id) {
 
-        Batch batch=new Batch();
-        int quantity=0;
-        int dispense=0;
-        int available=0;
-        String unit="";
+        Batch batch = new Batch();
+        int quantity = 0;
+        int dispense = 0;
+        int available = 0;
+        String unit = "";
 
-        try{
-            connect=new ConnectionClass();
-            rs=connect.select("SELECT * FROM gnhs_system_db.batch WHERE items_item_id='"+id+"'");
-            while (rs.next()){
-                quantity+=rs.getInt("quantity");
-                dispense+=rs.getInt("num_of_dispensed");
-                available+=rs.getInt("remaining");
-                unit=rs.getString("unit");
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select("SELECT * FROM gnhs_system_db.batch WHERE items_item_id='" + id + "'");
+            while (rs.next()) {
+                quantity += rs.getInt("quantity");
+                dispense += rs.getInt("num_of_dispensed");
+                available += rs.getInt("remaining");
+                unit = rs.getString("unit");
                 batch.setQuantity(quantity);
                 batch.setUnit(unit);
                 batch.setRemaining(available);
                 batch.setDispensed(dispense);
             }
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return batch;
     }
 
-    private void populateItemsFilter(){
-        ObservableList<String>itemFilter=FXCollections.observableArrayList();
+    private void populateItemsFilter() {
+        ObservableList<String> itemFilter = FXCollections.observableArrayList();
         itemFilter.add("All");
         itemFilter.add("Item name");
         itemFilter.add("Item type");
@@ -318,12 +321,12 @@ public class Dashboard_Controller implements Initializable {
 
     @FXML
     void recordsFilterComboboxSelectionChanged(ActionEvent event) {
-        populatePatientInfoTable(recordsFilterCombobox.getValue(),recordSearchForField.getText());
+        populatePatientInfoTable(recordsFilterCombobox.getValue(), recordSearchForField.getText());
     }
 
     @FXML
     void searchKeyReleased() {
-        populatePatientInfoTable(recordsFilterCombobox.getValue(),recordSearchForField.getText());
+        populatePatientInfoTable(recordsFilterCombobox.getValue(), recordSearchForField.getText());
     }
 
     @FXML
@@ -333,7 +336,7 @@ public class Dashboard_Controller implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Patient_Info_Window.fxml"));
             Parent home = loader.load();
 
-            Patient_Info_Controller control=loader.getController();
+            Patient_Info_Controller control = loader.getController();
             control.setDashboardController(Dashboard_Controller.this);
 
             Scene scene2 = new Scene(home);
@@ -349,42 +352,42 @@ public class Dashboard_Controller implements Initializable {
     }
 
     //HEALTH APPRAISAL METHODS
-    public void populatePatientInfoTable(String filter, String value){
+    public void populatePatientInfoTable(String filter, String value) {
 
-        ObservableList<Patient_Information_Summary> patient_summary=FXCollections.observableArrayList();
+        ObservableList<Patient_Information_Summary> patient_summary = FXCollections.observableArrayList();
 
-        try{
-            connect=new ConnectionClass();
+        try {
+            connect = new ConnectionClass();
 
-            if(filter.equals("All")){
-                rs=connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' ORDER BY last_name ASC;");
-            }else if(filter.equals("First name")){
-                rs=connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND first_name LIKE '%"+value+"%' ORDER BY last_name ASC");
-            }else if(filter.equals("Last name")){
-                rs=connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND last_name LIKE '%"+value+"%' ORDER BY last_name ASC");
-            }else if(filter.equals("Middle name")){
-                rs=connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND middle_name LIKE '%"+value+"%' ORDER BY last_name ASC");
+            if (filter.equals("All")) {
+                rs = connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' ORDER BY last_name ASC;");
+            } else if (filter.equals("First name")) {
+                rs = connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND first_name LIKE '%" + value + "%' ORDER BY last_name ASC");
+            } else if (filter.equals("Last name")) {
+                rs = connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND last_name LIKE '%" + value + "%' ORDER BY last_name ASC");
+            } else if (filter.equals("Middle name")) {
+                rs = connect.select("SELECT patient_id, first_name, last_name, middle_name FROM gnhs_system_db.patients WHERE status='active' AND middle_name LIKE '%" + value + "%' ORDER BY last_name ASC");
 
             }
 
-            while (rs.next()){
-                Patient_Information_Summary summary=new Patient_Information_Summary();
-                int id=rs.getInt("patient_id");
+            while (rs.next()) {
+                Patient_Information_Summary summary = new Patient_Information_Summary();
+                int id = rs.getInt("patient_id");
                 summary.setPatientID(id);
                 summary.setFirstname(rs.getString("first_name"));
                 summary.setLastname(rs.getString("last_name"));
                 summary.setMiddleName(rs.getString("middle_name"));
 
-                Button deleteButton=new Button("Delete");
-                Button updateButton=new Button("Update");
-                Button addRecordButton=new Button("Add Record");
+                Button deleteButton = new Button("Delete");
+                Button updateButton = new Button("Update");
+                Button addRecordButton = new Button("Add Record");
 
                 deleteButton.getStyleClass().add("clearButtons");
                 updateButton.getStyleClass().add("saveButtons");
                 addRecordButton.getStyleClass().add("actionButtons");
 
-                HBox buttonContainer=new HBox();
-                buttonContainer.setId(id+"");
+                HBox buttonContainer = new HBox();
+                buttonContainer.setId(id + "");
 
                 deleteButton.setPrefWidth(100);
                 updateButton.setPrefWidth(100);
@@ -393,13 +396,14 @@ public class Dashboard_Controller implements Initializable {
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
 
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
                 buttonContainer.getChildren().addAll(addRecordButton, updateButton, deleteButton);
 
                 updateButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(updateButton.getParent().getId());
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(updateButton.getParent().getId());
                         setSelectedPatientID(containerID);
 
                         try {
@@ -407,10 +411,10 @@ public class Dashboard_Controller implements Initializable {
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Patient_Info_Window.fxml"));
                             Parent home = loader.load();
 
-                            Patient_Info_Controller control=loader.getController();
+                            Patient_Info_Controller control = loader.getController();
                             control.setDashboardController(Dashboard_Controller.this);
 
-                            Patient_Info_Controller controller=loader.getController();
+                            Patient_Info_Controller controller = loader.getController();
                             controller.setPatientID(getSelectedPatientID());
                             controller.setUpdating(true);
                             controller.fetchInformation();
@@ -430,18 +434,19 @@ public class Dashboard_Controller implements Initializable {
                 });
 
                 addRecordButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(addRecordButton.getParent().getId());
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(addRecordButton.getParent().getId());
 
                         try {
 
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Records_Window.fxml"));
                             Parent home = loader.load();
 
-                            Records_Controller control=loader.getController();
+                            Records_Controller control = loader.getController();
                             control.setDashboardController(Dashboard_Controller.this);
 
-                            Records_Controller recordsController=loader.getController();
+                            Records_Controller recordsController = loader.getController();
                             recordsController.setActiveID(containerID);
                             recordsController.printDetails();
 
@@ -460,8 +465,9 @@ public class Dashboard_Controller implements Initializable {
                 });
 
                 deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(deleteButton.getParent().getId());
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(deleteButton.getParent().getId());
 
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Delete Record");
@@ -474,24 +480,24 @@ public class Dashboard_Controller implements Initializable {
 
                         if (button == ButtonType.OK) {
 
-                            int affectedRows=0;
+                            int affectedRows = 0;
 
-                            try{
-                                connect=new ConnectionClass();
-                                affectedRows=connect.update(String.format("UPDATE gnhs_system_db.patients SET status = 'removed' WHERE (patient_id = '%d')",containerID));
+                            try {
+                                connect = new ConnectionClass();
+                                affectedRows = connect.update(String.format("UPDATE gnhs_system_db.patients SET status = 'removed' WHERE (patient_id = '%d')", containerID));
 
-                                if(affectedRows>0){
-                                    Notifications updateSuccessful=new Notifications("Success!", "Patient record successfully removed.");
+                                if (affectedRows > 0) {
+                                    Notifications updateSuccessful = new Notifications("Success!", "Patient record successfully removed.");
                                     updateSuccessful.showInformation();
                                 }
 
                                 connect.close();
-                            }catch (Exception e){
-                                Notifications updateUnsuccessful=new Notifications("Error!", e.getMessage());
+                            } catch (Exception e) {
+                                Notifications updateUnsuccessful = new Notifications("Error!", e.getMessage());
                                 updateUnsuccessful.showError();
                             }
                         }
-                        populatePatientInfoTable("All","");
+                        populatePatientInfoTable("All", "");
                     }
                 });
 
@@ -500,8 +506,8 @@ public class Dashboard_Controller implements Initializable {
                 patient_summary.add(summary);
 
             }
-        connect.close();
-        }catch (Exception e){
+            connect.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -522,46 +528,46 @@ public class Dashboard_Controller implements Initializable {
     @FXML
     void healthAppraisalNavButtonClicked() {
 
-        if(!healthAppraisalContainer.isVisible()){
+        if (!healthAppraisalContainer.isVisible()) {
             healthAppraisalContainer.setVisible(true);
             healthAppraisalNavButton.setStyle("-fx-background-color: #1c84c6");
             inventoryNavButton.setStyle("-fx-background-color: transparent");
 
-            if(inventoryContainer.isVisible()){
+            if (inventoryContainer.isVisible()) {
                 inventoryContainer.setVisible(false);
             }
         }
 
-        populateItemSummaryTable("All","");
+        populateItemSummaryTable("All", "");
     }
 
     @FXML
     void inventoryNavButtonClicked() {
 
-        if(!inventoryContainer.isVisible()){
+        if (!inventoryContainer.isVisible()) {
             inventoryContainer.setVisible(true);
             inventoryNavButton.setStyle("-fx-background-color: #1c84c6");
             healthAppraisalNavButton.setStyle("-fx-background-color: transparent");
 
 
-            if(healthAppraisalContainer.isVisible()){
+            if (healthAppraisalContainer.isVisible()) {
                 healthAppraisalContainer.setVisible(false);
             }
         }
 
-        populatePatientInfoTable("All","");
+        populatePatientInfoTable("All", "");
     }
 
-    public int getSelectedPatientID(){
+    public int getSelectedPatientID() {
         return this.selectedPatientID;
     }
 
-    public void setSelectedPatientID(int id){
-        this.selectedPatientID=id;
+    public void setSelectedPatientID(int id) {
+        this.selectedPatientID = id;
     }
 
-    private void populateRecordsFilter(){
-        ObservableList<String> recordsFiler=FXCollections.observableArrayList();
+    private void populateRecordsFilter() {
+        ObservableList<String> recordsFiler = FXCollections.observableArrayList();
         recordsFiler.add("All");
         recordsFiler.add("First name");
         recordsFiler.add("Last name");
@@ -571,23 +577,23 @@ public class Dashboard_Controller implements Initializable {
         recordsFilterCombobox.getSelectionModel().select(0);
     }
 
-    public void setRefillController(Refill_Window_Controller controller){
-        refillController=controller;
+    public void setRefillController(Refill_Window_Controller controller) {
+        refillController = controller;
     }
 
-    public String getRecordsFilterValue(){
+    public String getRecordsFilterValue() {
         return recordsFilterCombobox.getValue();
     }
 
-    public String getSearchValue(){
+    public String getSearchValue() {
         return recordSearchForField.getText();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateItemsFilter();
-        populateItemSummaryTable("All","");
+        populateItemSummaryTable("All", "");
         populateRecordsFilter();
-        populatePatientInfoTable(recordsFilterCombobox.getValue(),recordSearchForField.getText());
+        populatePatientInfoTable(recordsFilterCombobox.getValue(), recordSearchForField.getText());
     }
 }

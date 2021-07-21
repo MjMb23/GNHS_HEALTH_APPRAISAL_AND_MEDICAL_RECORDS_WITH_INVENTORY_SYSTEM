@@ -1,8 +1,5 @@
 package org.example.controllers;
 
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import org.example.connection.ConnectionClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,8 +9,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.example.connection.ConnectionClass;
 import org.example.models.*;
 
 import java.net.URL;
@@ -22,10 +22,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.scene.control.ComboBox;
 
-
-public class Item_Details_Controller implements Initializable{
+public class Item_Details_Controller implements Initializable {
 
     @FXML
     private VBox infoContainer;
@@ -115,28 +113,28 @@ public class Item_Details_Controller implements Initializable{
     private int totalDispensed;
     private int totalRemaining;
     ObservableList<Item> itemsFilter;
-    Dashboard_Controller dashboardController=new Dashboard_Controller();
+    Dashboard_Controller dashboardController = new Dashboard_Controller();
 
     @FXML
     void itemFilterComboBoxSelectionChange() {
 
-        Item selectedItem=itemFilterComboBox.getSelectionModel().getSelectedItem();
+        Item selectedItem = itemFilterComboBox.getSelectionModel().getSelectedItem();
         fetchTransactionHistory(selectedItem.getItemID());
 
     }
 
     @FXML
     void itemComboboxSelectionChanged() {
-        Item_Summary selectedItem=itemCombobox.getSelectionModel().getSelectedItem();
-        int id=selectedItem.getItemID();
+        Item_Summary selectedItem = itemCombobox.getSelectionModel().getSelectedItem();
+        int id = selectedItem.getItemID();
         fetchItems(id);
         itemNameLabel.setText(selectedItem.getItemName());
         itemTypeLabel.setText(selectedItem.getItemType());
-        totalQuantityLabel.setText(totalQuantity+"");
+        totalQuantityLabel.setText(totalQuantity + "");
         totalQuantityUnit.setText(selectedItem.getUnit());
-        totalDispensedQuantity.setText(totalDispensed+"");
+        totalDispensedQuantity.setText(totalDispensed + "");
         totalDispensedUnit.setText(selectedItem.getUnit());
-        totalRemainingQuantity.setText(totalQuantity+"");
+        totalRemainingQuantity.setText(totalRemaining + "");
         totalRemainingUnit.setText(selectedItem.getUnit());
         populateBatchTable();
 
@@ -144,29 +142,29 @@ public class Item_Details_Controller implements Initializable{
         itemFilterComboBoxSelectionChange();
     }
 
-    private void fetchItems(int itemId){
+    private void fetchItems(int itemId) {
 
-        totalQuantity=0;
-        totalDispensed=0;
-        totalRemaining=0;
+        totalQuantity = 0;
+        totalDispensed = 0;
+        totalRemaining = 0;
 
-        items=FXCollections.observableArrayList();
+        items = FXCollections.observableArrayList();
 
-        try{
-            conn=new ConnectionClass();
-            rs=conn.select(String.format("SELECT * FROM gnhs_system_db.items " +
-                                         "JOIN gnhs_system_db.batch ON items.item_id=batch.items_item_id WHERE items.item_id='%d' AND status!='disposed';", itemId));
-            while (rs.next()){
+        try {
+            conn = new ConnectionClass();
+            rs = conn.select(String.format("SELECT * FROM gnhs_system_db.items " +
+                    "JOIN gnhs_system_db.batch ON items.item_id=batch.items_item_id WHERE items.item_id='%d' AND status!='disposed';", itemId));
+            while (rs.next()) {
 
-                Batch_Full_Details item=new Batch_Full_Details();
+                Batch_Full_Details item = new Batch_Full_Details();
 
-                int quantity=rs.getInt("quantity");
-                int dispensed=rs.getInt("num_of_dispensed");
-                int remaining=rs.getInt("remaining");
+                int quantity = rs.getInt("quantity");
+                int dispensed = rs.getInt("num_of_dispensed");
+                int remaining = rs.getInt("remaining");
 
-                totalQuantity+=quantity;
-                totalDispensed+=dispensed;
-                totalRemaining+=remaining;
+                totalQuantity += quantity;
+                totalDispensed += dispensed;
+                totalRemaining += remaining;
 
                 item.setBatchID(rs.getInt("batch_id"));
                 item.setItemID(rs.getInt("item_id"));
@@ -181,26 +179,27 @@ public class Item_Details_Controller implements Initializable{
                 item.setRemarks(rs.getString("remarks"));
                 item.setStatus(rs.getString("status"));
 
-                int id=rs.getInt("batch_id");
+                int id = rs.getInt("batch_id");
 
-                Button dispose=new Button("Dispose");
+                Button dispose = new Button("Dispose");
 
-                HBox buttonContainer=new HBox();
-                buttonContainer.setId(id+"");
+                HBox buttonContainer = new HBox();
+                buttonContainer.setId(id + "");
 
                 dispose.setPrefWidth(100);
 
                 buttonContainer.setAlignment(Pos.CENTER);
                 buttonContainer.setSpacing(10.0);
-                buttonContainer.setPadding(new Insets(10,10,10,10));
+                buttonContainer.setPadding(new Insets(10, 10, 10, 10));
                 dispose.getStyleClass().add("clearButtons");
 
                 buttonContainer.getChildren().addAll(dispose);
 
                 dispose.setOnAction(new EventHandler<ActionEvent>() {
 
-                    @Override public void handle(ActionEvent event) {
-                        int containerID=Integer.parseInt(dispose.getParent().getId());
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int containerID = Integer.parseInt(dispose.getParent().getId());
 
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Delete Record");
@@ -212,10 +211,10 @@ public class Item_Details_Controller implements Initializable{
                         ButtonType button = result.orElse(ButtonType.CANCEL);
 
                         if (button == ButtonType.OK) {
-                            try{
-                                conn=new ConnectionClass();
-                                conn.delete(String.format("UPDATE gnhs_system_db.batch SET status = 'disposed' WHERE (`batch_id` = '%d')",containerID));
-                            }catch (Exception e){
+                            try {
+                                conn = new ConnectionClass();
+                                conn.delete(String.format("UPDATE gnhs_system_db.batch SET status = 'disposed' WHERE (`batch_id` = '%d')", containerID));
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             itemComboboxSelectionChanged();
@@ -227,7 +226,7 @@ public class Item_Details_Controller implements Initializable{
                 items.add(item);
             }
             conn.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println();
         }
@@ -235,9 +234,9 @@ public class Item_Details_Controller implements Initializable{
         dashboardController.populateItemSummaryTable(dashboardController.getRecordsFilterValue(), dashboardController.getSearchValue());
     }
 
-    private void populateBatchTable(){
+    private void populateBatchTable() {
 
-        if(!(items.isEmpty())){
+        if (!(items.isEmpty())) {
             quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
             entryDateColumn.setCellValueFactory(new PropertyValueFactory<>("entryDate"));
             expirationDateColumn.setCellValueFactory(new PropertyValueFactory<>("expirationDate"));
@@ -250,16 +249,16 @@ public class Item_Details_Controller implements Initializable{
         }
     }
 
-    private void getAvailableItems(){
+    private void getAvailableItems() {
 
-        itemAvailable=FXCollections.observableArrayList();
+        itemAvailable = FXCollections.observableArrayList();
 
-        try{
-            conn=new ConnectionClass();
-            rs=conn.select("SELECT DISTINCT items.item_id, items.item_name, items.item_type, batch.unit FROM gnhs_system_db.items " +
+        try {
+            conn = new ConnectionClass();
+            rs = conn.select("SELECT DISTINCT items.item_id, items.item_name, items.item_type, batch.unit FROM gnhs_system_db.items " +
                     "LEFT JOIN gnhs_system_db.batch ON items.item_id=batch.items_item_id;");
-            while (rs.next()){
-                Item_Summary item=new Item_Summary();
+            while (rs.next()) {
+                Item_Summary item = new Item_Summary();
                 item.setItemID(rs.getInt("item_id"));
                 item.setItemName(rs.getString("item_name"));
                 item.setUnit(rs.getString("unit"));
@@ -268,57 +267,57 @@ public class Item_Details_Controller implements Initializable{
                 itemAvailable.add(item);
             }
             conn.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         itemCombobox.setItems(itemAvailable);
     }
 
-    public void setItemCombobox(int id){
+    public void setItemCombobox(int id) {
 
-        for (Item_Summary item: itemAvailable) {
-            if(item.getItemID()==id){
+        for (Item_Summary item : itemAvailable) {
+            if (item.getItemID() == id) {
                 itemCombobox.getSelectionModel().select(item);
             }
         }
     }
 
-    public void setItemFilterComboBox(int id){
-        for(Item item: itemsFilter){
-            if(item.getItemID()==id){
+    public void setItemFilterComboBox(int id) {
+        for (Item item : itemsFilter) {
+            if (item.getItemID() == id) {
                 itemFilterComboBox.getSelectionModel().select(item);
             }
         }
     }
 
-    public void setDashboardController(Dashboard_Controller controller){
-        dashboardController=controller;
+    public void setDashboardController(Dashboard_Controller controller) {
+        dashboardController = controller;
     }
 
-    public void fetchTransactionHistory(int itemID){
+    public void fetchTransactionHistory(int itemID) {
 
-        ObservableList<Transaction_History> transaction=FXCollections.observableArrayList();
+        ObservableList<Transaction_History> transaction = FXCollections.observableArrayList();
 
-        try{
+        try {
 
-            String itemIDCondition="";
+            String itemIDCondition = "";
 
-            if(itemID==0){
-                itemIDCondition="";
-            }else{
-                itemIDCondition=String.format("WHERE items.item_id='%d'",itemID);
+            if (itemID == 0) {
+                itemIDCondition = "";
+            } else {
+                itemIDCondition = String.format("WHERE items.item_id='%d'", itemID);
             }
 
-            conn=new ConnectionClass();
-            rs=conn.select(String.format("SELECT distinct items.item_name, CONCAT(patients.first_name, ' ',patients.last_name) AS full_name, medicine_or_equipment_given.quantity, batch.unit , record.date_taken\n" +
+            conn = new ConnectionClass();
+            rs = conn.select(String.format("SELECT distinct items.item_name, CONCAT(patients.first_name, ' ',patients.last_name) AS full_name, medicine_or_equipment_given.quantity, batch.unit , record.date_taken\n" +
                     " FROM gnhs_system_db.medicine_or_equipment_given\n" +
                     " JOIN gnhs_system_db.items ON medicine_or_equipment_given.items_item_id=items.item_id\n" +
                     " JOIN gnhs_system_db.record ON medicine_or_equipment_given.record_record_id=record.record_id\n" +
                     " JOIN gnhs_system_db.patients ON record.patient_id=patients.patient_id\n" +
                     " JOIN gnhs_system_db.batch ON batch.items_item_id=items.item_id %s ORDER BY date_taken DESC", itemIDCondition));
 
-            while(rs.next()){
-                Transaction_History trans=new Transaction_History();
+            while (rs.next()) {
+                Transaction_History trans = new Transaction_History();
                 trans.setItemName(rs.getString("item_name"));
                 trans.setRecipient(rs.getString("full_name"));
                 trans.setQuantity(rs.getInt("quantity"));
@@ -328,7 +327,7 @@ public class Item_Details_Controller implements Initializable{
                 transaction.add(trans);
             }
             conn.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -340,26 +339,26 @@ public class Item_Details_Controller implements Initializable{
         transactionHistoryTable.setItems(transaction);
     }
 
-    public void populateItemFilterComboBox(){
-        itemsFilter=FXCollections.observableArrayList();
+    public void populateItemFilterComboBox() {
+        itemsFilter = FXCollections.observableArrayList();
 
-        Item item=new Item();
+        Item item = new Item();
         item.setItemID(0);
         item.setItemName("All Items");
         itemsFilter.add(item);
 
-        try{
-            conn=new ConnectionClass();
-            rs=conn.select("SELECT item_id, item_name FROM gnhs_system_db.items;");
+        try {
+            conn = new ConnectionClass();
+            rs = conn.select("SELECT item_id, item_name FROM gnhs_system_db.items;");
 
-            while (rs.next()){
-                Item newItem=new Item();
+            while (rs.next()) {
+                Item newItem = new Item();
                 newItem.setItemID(rs.getInt("item_id"));
                 newItem.setItemName(rs.getString("item_name"));
                 itemsFilter.add(newItem);
             }
-           conn.close();
-        }catch (Exception e){
+            conn.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -1,6 +1,5 @@
 package org.example.controllers;
 
-import org.example.connection.ConnectionClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.skin.ButtonSkin;
 import javafx.scene.layout.HBox;
+import org.example.connection.ConnectionClass;
 import org.example.models.*;
 
 import java.net.URL;
@@ -79,9 +79,9 @@ public class Records_Controller implements Initializable {
     private ResultSet recordIDResultSet;
     private ConnectionClass connect;
     private ResultSet patient, vacHis, medHis, rs, checkupHistory, itemsGiven;
-    private ObservableList<Item_Given> itemGiven= FXCollections.observableArrayList();
-    private ObservableList<Item> choices=FXCollections.observableArrayList();
-    Dashboard_Controller dashboardController=new Dashboard_Controller();
+    private final ObservableList<Item_Given> itemGiven = FXCollections.observableArrayList();
+    private final ObservableList<Item> choices = FXCollections.observableArrayList();
+    Dashboard_Controller dashboardController = new Dashboard_Controller();
 
     @FXML
     void addButtonClicked() {
@@ -104,7 +104,7 @@ public class Records_Controller implements Initializable {
         deductItems();
         clear();
 
-        if(!(itemChoiceBox.getItems().isEmpty())){
+        if (!(itemChoiceBox.getItems().isEmpty())) {
             addButton.setDisable(true);
         }
     }
@@ -117,29 +117,28 @@ public class Records_Controller implements Initializable {
         this.activeID = activeID;
     }
 
-    public void printDetails(){
+    public void printDetails() {
 
         patientInformationArea.clear();
 
-        int id=getActiveID();
-        ObservableList<History> vaccineHistory= FXCollections.observableArrayList();
-        ObservableList<History> medicalHistory= FXCollections.observableArrayList();
-        ArrayList<Check_Up_Record> record=new ArrayList<>();
+        int id = getActiveID();
+        ObservableList<History> vaccineHistory = FXCollections.observableArrayList();
+        ObservableList<History> medicalHistory = FXCollections.observableArrayList();
+        ArrayList<Check_Up_Record> record = new ArrayList<>();
 
-        Patient_Info patientInfo=new Patient_Info();
+        Patient_Info patientInfo = new Patient_Info();
 
-        int count=0;
+        int count = 0;
 
 
+        try {
+            connect = new ConnectionClass();
+            patient = connect.select(String.format("SELECT * FROM gnhs_system_db.patients WHERE patient_id = '%d'", id));
+            vacHis = connect.select(String.format("SELECT vaccination_description FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id='%d'", id));
+            medHis = connect.select(String.format("SELECT history_description FROM gnhs_system_db.medical_history WHERE patient_id='%d'", id));
+            checkupHistory = connect.select(String.format("SELECT * FROM gnhs_system_db.record WHERE patient_id='%d' ORDER BY record_id DESC", id));
 
-        try{
-            connect=new ConnectionClass();
-            patient=connect.select(String.format("SELECT * FROM gnhs_system_db.patients WHERE patient_id = '%d'",id));
-            vacHis=connect.select(String.format("SELECT vaccination_description FROM gnhs_system_db.vaccination_or_immunization_history WHERE patient_id='%d'",id));
-            medHis=connect.select(String.format("SELECT history_description FROM gnhs_system_db.medical_history WHERE patient_id='%d'",id));
-            checkupHistory=connect.select(String.format("SELECT * FROM gnhs_system_db.record WHERE patient_id='%d' ORDER BY record_id DESC",id));
-
-            while (patient.next()){
+            while (patient.next()) {
 
                 patientInfo.setFirstname(patient.getString("first_name"));
                 patientInfo.setLastname(patient.getString("last_name"));
@@ -153,44 +152,44 @@ public class Records_Controller implements Initializable {
 
             }
 
-            patientInformationArea.appendText("Full name: "+patientInfo.getLastname()+", "+patientInfo.getFirstname()+" "+patientInfo.getMiddleName());
-            patientInformationArea.appendText("\nBirthdate: "+patientInfo.getBirthdate()+"\t\tSex: "+patientInfo.getSex()+"\t\tAge: "+patientInfo.getAge()+
-                    "\t\tWeight: "+patientInfo.getWeight()+"kg."+"\t\tHeight: "+patientInfo.getHeight()+"cm."+"\t\tBMI: "+patientInfo.getBMI());
+            patientInformationArea.appendText("Full name: " + patientInfo.getLastname() + ", " + patientInfo.getFirstname() + " " + patientInfo.getMiddleName());
+            patientInformationArea.appendText("\nBirthdate: " + patientInfo.getBirthdate() + "\t\tSex: " + patientInfo.getSex() + "\t\tAge: " + patientInfo.getAge() +
+                    "\t\tWeight: " + patientInfo.getWeight() + "kg." + "\t\tHeight: " + patientInfo.getHeight() + "cm." + "\t\tBMI: " + patientInfo.getBMI());
 
             String currentCondition;
-            if(patientInfo.getCurrentCondition().equals("")){
-                currentCondition="Not Specified";
-            }else{
-                currentCondition=patientInfo.getCurrentCondition();
+            if (patientInfo.getCurrentCondition().equals("")) {
+                currentCondition = "Not Specified";
+            } else {
+                currentCondition = patientInfo.getCurrentCondition();
             }
-            patientInformationArea.appendText("\n\nCURRENT CONDITION:\n"+currentCondition);
+            patientInformationArea.appendText("\n\nCURRENT CONDITION:\n" + currentCondition);
 
-            while (vacHis.next()){
-                History vaccineHis=new History();
+            while (vacHis.next()) {
+                History vaccineHis = new History();
                 vaccineHis.setHistoryDescription(vacHis.getString("vaccination_description"));
                 vaccineHistory.add(vaccineHis);
             }
 
             patientInformationArea.appendText("\n\nVACCINATION OR IMMUNIZATION HISTORY\n");
 
-            for (History vac: vaccineHistory) {
-                patientInformationArea.appendText(vac.getHistoryDescription()+", ");
+            for (History vac : vaccineHistory) {
+                patientInformationArea.appendText(vac.getHistoryDescription() + ", ");
             }
 
-            while (medHis.next()){
-                History medicalHis=new History();
+            while (medHis.next()) {
+                History medicalHis = new History();
                 medicalHis.setHistoryDescription(medHis.getString("history_description"));
                 medicalHistory.add(medicalHis);
             }
 
             patientInformationArea.appendText("\n\nMEDICAL HISTORY:\n");
 
-            for(History med: medicalHistory){
-                patientInformationArea.appendText(med.getHistoryDescription()+", ");
+            for (History med : medicalHistory) {
+                patientInformationArea.appendText(med.getHistoryDescription() + ", ");
             }
 
-            while(checkupHistory.next()){
-                Check_Up_Record checkRec=new Check_Up_Record();
+            while (checkupHistory.next()) {
+                Check_Up_Record checkRec = new Check_Up_Record();
                 checkRec.setId(checkupHistory.getInt("record_id"));
                 checkRec.setBP(checkupHistory.getString("bp"));
                 checkRec.setTEMP(checkupHistory.getFloat("temp"));
@@ -207,122 +206,122 @@ public class Records_Controller implements Initializable {
 
             patientInformationArea.appendText("\n\nCHECKUP HISTORY:");
 
-            for (Check_Up_Record rec: record) {
+            for (Check_Up_Record rec : record) {
 
-                ArrayList<Item_Given> givenItems=new ArrayList<>();
+                ArrayList<Item_Given> givenItems = new ArrayList<>();
 
-                patientInformationArea.appendText(String.format("\n-------------------------------------------------------------- %d --------------------------------------------------------------",count--));
-                patientInformationArea.appendText("\nDate Taken: "+rec.getDateTaken());
+                patientInformationArea.appendText(String.format("\n-------------------------------------------------------------- %d --------------------------------------------------------------", count--));
+                patientInformationArea.appendText("\nDate Taken: " + rec.getDateTaken());
                 patientInformationArea.appendText(String.format("\nBP: %s mmhg\t\tTEMP: %.2f °C\t\tRR: %d brpm\t\tPR: %d bpm\t\tO2: %d",
-                                                                rec.getBP(), rec.getTEMP(),rec.getRR(),rec.getPR(),rec.getO2()));
+                        rec.getBP(), rec.getTEMP(), rec.getRR(), rec.getPR(), rec.getO2()));
                 patientInformationArea.appendText("\nChief Complaint:");
-                patientInformationArea.appendText(" "+rec.getChiefComplaint());
+                patientInformationArea.appendText(" " + rec.getChiefComplaint());
                 patientInformationArea.appendText("\nManagement or Treatment:");
-                patientInformationArea.appendText(" "+rec.getTreatment());
+                patientInformationArea.appendText(" " + rec.getTreatment());
                 patientInformationArea.appendText("\nMedicine or Equipment given: ");
 
-                itemsGiven=connect.select(String.format("SELECT DISTINCT items.item_name, medicine_or_equipment_given.quantity, batch.unit FROM  gnhs_system_db.medicine_or_equipment_given\n" +
+                itemsGiven = connect.select(String.format("SELECT DISTINCT items.item_name, medicine_or_equipment_given.quantity, batch.unit FROM  gnhs_system_db.medicine_or_equipment_given\n" +
                         " JOIN gnhs_system_db.items\n" +
                         " ON medicine_or_equipment_given.items_item_id=items.item_id\n" +
                         " JOIN gnhs_system_db.batch\n" +
-                        " ON items.item_id=batch.items_item_id WHERE medicine_or_equipment_given.record_record_id='%d'",rec.getId()));
+                        " ON items.item_id=batch.items_item_id WHERE medicine_or_equipment_given.record_record_id='%d'", rec.getId()));
                 String items = "";
 
-                while (itemsGiven.next()){
-                    Item_Given item=new Item_Given();
+                while (itemsGiven.next()) {
+                    Item_Given item = new Item_Given();
                     item.setItemName(itemsGiven.getString("item_name"));
                     item.setQuantity(itemsGiven.getInt("quantity"));
                     item.setUnit(itemsGiven.getString("unit"));
                     givenItems.add(item);
                 }
 
-                for (Item_Given item:givenItems) {
-                    items=items.concat(String.format("%s %d %s, ",item.getItemName(),item.getQuantity(),item.getUnit()));
+                for (Item_Given item : givenItems) {
+                    items = items.concat(String.format("%s %d %s, ", item.getItemName(), item.getQuantity(), item.getUnit()));
                 }
 
                 patientInformationArea.appendText(items);
             }
 
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void populateItemsChoiceBox(){
+    private void populateItemsChoiceBox() {
 
-        try{
-            connect=new ConnectionClass();
-            rs=connect.select(String.format("SELECT * FROM gnhs_system_db.items"));
-            while(rs.next()){
-                Item itemChoice=new Item();
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select(String.format("SELECT * FROM gnhs_system_db.items"));
+            while (rs.next()) {
+                Item itemChoice = new Item();
                 itemChoice.setItemID(rs.getInt("item_id"));
                 itemChoice.setItemName(rs.getString("item_name"));
                 choices.add(itemChoice);
             }
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         itemChoiceBox.setItems(choices);
         itemChoiceBox.getSelectionModel().select(0);
     }
 
-    private void insertCheckUpDetails(){
+    private void insertCheckUpDetails() {
 
-        boolean insert=true;
-        LocalDate dateNow=LocalDate.now();
-        String bp=BPField.getText();
-        String complaint=chiefComplaintArea.getText();
-        String treatment=managementArea.getText();
+        boolean insert = true;
+        LocalDate dateNow = LocalDate.now();
+        String bp = BPField.getText();
+        String complaint = chiefComplaintArea.getText();
+        String treatment = managementArea.getText();
 
         Float temp = null;
         int rr = 0;
         int pr = 0;
         int o2 = 0;
 
-        try{
-            temp=Float.parseFloat(TEMPField.getText());
-            rr=Integer.parseInt(RRField.getText());
-            pr=Integer.parseInt(PRField.getText());
-            o2=Integer.parseInt(O2Field.getText());
-        }catch (Exception e){
+        try {
+            temp = Float.parseFloat(TEMPField.getText());
+            rr = Integer.parseInt(RRField.getText());
+            pr = Integer.parseInt(PRField.getText());
+            o2 = Integer.parseInt(O2Field.getText());
+        } catch (Exception e) {
             //e.printStackTrace();
-            insert=false;
-            Notifications error=new Notifications("Error", "Invalid input or a field is blank.");
+            insert = false;
+            Notifications error = new Notifications("Error", "Invalid input or a field is blank.");
             error.showError();
         }
 
-        if(insert){
-            try{
+        if (insert) {
+            try {
 
-                int affectedRows=0;
-                connect=new ConnectionClass();
-                affectedRows=connect.insert(String.format("INSERT INTO gnhs_system_db.record (`bp`, `temp`, `rr`, `pr`, `o2`, `chief_complaint`, `management_or_treatment`, `date_taken`, `patient_id`) " +
-                                "VALUES ('%s', '%f', '%d', '%d', '%d', '%s', '%s', '"+dateNow+"', '%d')",bp,temp,rr,pr,o2,complaint,treatment,getActiveID()));
+                int affectedRows = 0;
+                connect = new ConnectionClass();
+                affectedRows = connect.insert(String.format("INSERT INTO gnhs_system_db.record (`bp`, `temp`, `rr`, `pr`, `o2`, `chief_complaint`, `management_or_treatment`, `date_taken`, `patient_id`) " +
+                        "VALUES ('%s', '%f', '%d', '%d', '%d', '%s', '%s', '" + dateNow + "', '%d')", bp, temp, rr, pr, o2, complaint, treatment, getActiveID()));
 
-                recordIDResultSet=connect.select("SELECT last_insert_id() as id");
-                while(recordIDResultSet.next()){
-                    recordID=recordIDResultSet.getInt("id");
+                recordIDResultSet = connect.select("SELECT last_insert_id() as id");
+                while (recordIDResultSet.next()) {
+                    recordID = recordIDResultSet.getInt("id");
                     //System.out.println("last inserted record id: "+recordID);
                 }
 
-                if(affectedRows>0){
-                    Notifications success=new Notifications("Success!", "The record was added succesfully.");
+                if (affectedRows > 0) {
+                    Notifications success = new Notifications("Success!", "The record was added succesfully.");
                     success.showInformation();
                 }
                 connect.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 //e.printStackTrace();
-                Notifications error=new Notifications("Error", e.getMessage());
+                Notifications error = new Notifications("Error", e.getMessage());
                 error.showError();
             }
         }
     }
 
-    private void populateItemsTable(){
+    private void populateItemsTable() {
 
-        if(!(itemGiven.isEmpty())){
+        if (!(itemGiven.isEmpty())) {
             itemColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
             quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
             actionColumn.setCellValueFactory(new PropertyValueFactory<>("action"));
@@ -331,13 +330,13 @@ public class Records_Controller implements Initializable {
 
     }
 
-    private Node addNodes(int itemID){
+    private Node addNodes(int itemID) {
 
-        History history=new History();
+        History history = new History();
 
-        Button removeButton=new Button("x");
-        Button plusButton=new Button("+");
-        Button minusButton=new Button("-");
+        Button removeButton = new Button("x");
+        Button plusButton = new Button("+");
+        Button minusButton = new Button("-");
 
         minusButton.setSkin(new ButtonSkin(minusButton) {
             {
@@ -351,12 +350,12 @@ public class Records_Controller implements Initializable {
             }
         });
 
-        HBox buttonContainer=new HBox();
+        HBox buttonContainer = new HBox();
 
         buttonContainer.setAlignment(Pos.CENTER);
         buttonContainer.setSpacing(5.0);
-        buttonContainer.setId(itemID+"");
-        buttonContainer.setPadding(new Insets(10,10,10,10));
+        buttonContainer.setId(itemID + "");
+        buttonContainer.setPadding(new Insets(10, 10, 10, 10));
 
         removeButton.getStyleClass().add("clearButtons");
 
@@ -366,18 +365,18 @@ public class Records_Controller implements Initializable {
 
             int id = Integer.parseInt(removeButton.getParent().getId());
 
-            for(Iterator<Item_Given> it = itemGiven.iterator(); it.hasNext();){
+            for (Iterator<Item_Given> it = itemGiven.iterator(); it.hasNext(); ) {
 
-                Item_Given item=it.next();
+                Item_Given item = it.next();
 
                 if (item.getItemID() == id) {
                     it.remove();
-                    Item removed=new Item();
+                    Item removed = new Item();
                     removed.setItemID(id);
                     removed.setItemName(item.getItemName());
                     choices.add(removed);
                     itemChoiceBox.getSelectionModel().select(0);
-                    if(!(itemChoiceBox.getItems().isEmpty())){
+                    if (!(itemChoiceBox.getItems().isEmpty())) {
                         addButton.setDisable(false);
                     }
                     if (itemGiven != null) {
@@ -451,10 +450,10 @@ public class Records_Controller implements Initializable {
         return buttonContainer;
     }
 
-    private void addItem(){
+    private void addItem() {
 
-        Item selectedItem=itemChoiceBox.getValue();
-        Item_Given item=new Item_Given();
+        Item selectedItem = itemChoiceBox.getValue();
+        Item_Given item = new Item_Given();
         item.setItemID(selectedItem.getItemID());
         item.setItemName(selectedItem.getItemName());
         item.setQuantity(Integer.parseInt(quantityField.getText()));
@@ -463,7 +462,7 @@ public class Records_Controller implements Initializable {
 
         choices.remove(selectedItem);
         itemChoiceBox.getSelectionModel().select(0);
-        if(itemChoiceBox.getItems().isEmpty()){
+        if (itemChoiceBox.getItems().isEmpty()) {
             addButton.setDisable(true);
         }
 
@@ -471,82 +470,117 @@ public class Records_Controller implements Initializable {
         populateItemsTable();
     }
 
-    private void insertItems(){
+    private void insertItems() {
 
-        if(!(itemGiven.isEmpty())){
-            for (Item_Given item:itemGiven) {
+        if (!(itemGiven.isEmpty())) {
+            for (Item_Given item : itemGiven) {
                 try {
-                    connect=new ConnectionClass();
+                    connect = new ConnectionClass();
                     connect.insert(String.format("INSERT INTO gnhs_system_db.medicine_or_equipment_given (items_item_id, quantity, record_record_id) " +
-                            " VALUES ('%d', '%d', '%d')",item.getItemID(),item.getQuantity(),recordID));
+                            " VALUES ('%d', '%d', '%d')", item.getItemID(), item.getQuantity(), recordID));
                     connect.close();
-                }catch (Exception e){
-                    Notifications error=new Notifications("Error!",e.getMessage());
+                } catch (Exception e) {
+                    Notifications error = new Notifications("Error!", e.getMessage());
                     error.showError();
                 }
             }
         }
     }
 
-    public ArrayList<Batch> fetchAvailableBatch(int itemID){
+    public ArrayList<Batch> fetchAvailableBatch(int itemID) {
 
-        ArrayList<Batch> batch=new ArrayList<>();
+        ArrayList<Batch> batch = new ArrayList<>();
 
-        try{
-            connect=new ConnectionClass();
-            rs=connect.select(String.format("SELECT batch_id, remaining FROM gnhs_system_db.batch WHERE items_item_id='%d' AND remaining!='0'",itemID));
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select(String.format("SELECT batch_id, remaining FROM gnhs_system_db.batch WHERE items_item_id='%d' AND remaining!='0'", itemID));
 
-            while (rs.next()){
-                Batch available=new Batch();
+            while (rs.next()) {
+                Batch available = new Batch();
                 available.setBatchID(rs.getInt("batch_id"));
                 available.setRemaining(rs.getInt("remaining"));
                 batch.add(available);
             }
 
             connect.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return batch;
     }
 
-    private void deductItems(){
+    private void deductItems() {
+        int count = 1;
 
-        for (Item_Given item:itemGiven) {
+        for (Item_Given item : itemGiven) {
+
+            int innerCount = 1;
+
+            System.out.printf("Iteration [%d] %s:\n", count, item.getItemName());
 
             int excess=0;
-            for(Iterator<Batch> it = fetchAvailableBatch(item.getItemID()).iterator(); it.hasNext();){
-                Batch batch=it.next();
+            boolean withExcess=false;
 
-                if(item.getQuantity()<=batch.getRemaining()){
-                    try{
-                        connect=new ConnectionClass();
+            for (Iterator<Batch> it = fetchAvailableBatch(item.getItemID()).iterator(); it.hasNext(); ) {
+                Batch batch = it.next();
+
+                int quantity=item.getQuantity();
+                int remaining=batch.getRemaining();
+
+                if(withExcess){
+
+                    quantity=excess;
+                }
+
+                if (item.getQuantity() <= batch.getRemaining()) {
+
+                    withExcess=false;
+                    System.out.printf("\t\tBatch no: [%d] | [less than or equal remaining]\n", innerCount);
+                    System.out.printf("\t\tdeducting quantity of %d from remaining: %d\n\n",quantity, remaining);
+
+                    //System.out.printf("item quantity: %d - batch quantity: %d\n",item.getQuantity(), batch.getRemaining());
+
+                    try {
+                        connect = new ConnectionClass();
                         connect.update(String.format("UPDATE gnhs_system_db.batch SET num_of_dispensed = num_of_dispensed + '%d', remaining = remaining - '%d' " +
-                                                    " WHERE (batch_id = '%d') and (items_item_id = '%d');",item.getQuantity(),item.getQuantity(),batch.getBatchID(),item.getItemID()));
+                                " WHERE (batch_id = '%d') and (items_item_id = '%d');", quantity, quantity, batch.getBatchID(), item.getItemID()));
                         connect.close();
+
+                        //System.out.printf("less than remaining: deducting %d from remaining %d int batch id: %d\n", item.getQuantity(), batch.getRemaining(), batch.getBatchID());
+
                         break;
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                }else if(item.getQuantity()>batch.getQuantity()&&it.hasNext()){
-                    excess=item.getQuantity()-batch.getQuantity();
+                } else if (item.getQuantity() > batch.getQuantity() && it.hasNext()) {
+
+                    excess=item.getQuantity()-batch.getRemaining();
+                    withExcess=true;
+
+                    System.out.printf("\t\tBatch no: [%d] | [more than remaining]\n", innerCount);
+                    System.out.printf("\t\tdeducting quantity of %d from remaining: %d\n\n",remaining, remaining);
+
+                    //System.out.printf("item quantity: %d - excess: %d\n",item.getQuantity(), excess);
 
                     try {
-                        connect=new ConnectionClass();
+                        connect = new ConnectionClass();
                         connect.update(String.format("UPDATE gnhs_system_db.batch SET num_of_dispensed = num_of_dispensed + '%d', remaining = remaining - '%d' " +
-                                                    " WHERE (batch_id = '%d') and (items_item_id = '%d');",item.getQuantity(),item.getQuantity(),batch.getBatchID(),item.getItemID()));
+                                " WHERE (batch_id = '%d') and (items_item_id = '%d');", remaining, remaining, batch.getBatchID(), item.getItemID()));
                         connect.close();
-                    }catch (Exception e){
+                        //System.out.printf("more than remaining: deducting %d from remaining %d int batch id: %d\n", excess, batch.getRemaining(), batch.getBatchID());
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+                innerCount++;
             }
+            count++;
         }
     }
 
-    private void clear(){
+    private void clear() {
         BPField.clear();
         TEMPField.clear();
         PRField.clear();
@@ -560,8 +594,8 @@ public class Records_Controller implements Initializable {
         populateItemsTable();
     }
 
-    public void setDashboardController(Dashboard_Controller controller){
-        dashboardController=controller;
+    public void setDashboardController(Dashboard_Controller controller) {
+        dashboardController = controller;
     }
 
     @Override

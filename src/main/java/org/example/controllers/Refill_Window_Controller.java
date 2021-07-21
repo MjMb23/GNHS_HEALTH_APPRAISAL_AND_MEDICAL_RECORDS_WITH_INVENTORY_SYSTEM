@@ -128,7 +128,7 @@ public class Refill_Window_Controller implements Initializable{
             try{
                 conn=new ConnectionClass();
                 count=conn.insert(String.format("INSERT INTO gnhs_system_db.batch (quantity, unit, entry_date, expiration_date, num_of_dispensed, remaining, remarks, status, items_item_id) " +
-                        "VALUES ('%d', '%s', '"+newBatch.getEntryDate()+"', '"+newBatch.getExpirationDate()+"', '0', '0', '%s', '%s', '%d')",newBatch.getQuantity(), newBatch.getUnit(),newBatch.getRemarks(),newBatch.getStatus(),newBatch.getItemID()));
+                        "VALUES ('%d', '%s', '"+newBatch.getEntryDate()+"', '"+newBatch.getExpirationDate()+"', '0', '%d', '%s', '%s', '%d')",newBatch.getQuantity(), newBatch.getUnit(), newBatch.getQuantity(),newBatch.getRemarks(),newBatch.getStatus(), newBatch.getItemID()));
                 if(count>0){
                     Notifications success=new Notifications("Success!", String.format("Item %s successfully refilled.",selectedItemName));
                     success.showInformation();
