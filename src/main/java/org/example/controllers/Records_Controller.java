@@ -2,6 +2,8 @@ package org.example.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -19,6 +21,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class Records_Controller implements Initializable {
@@ -48,7 +51,7 @@ public class Records_Controller implements Initializable {
     private TextArea managementArea;
 
     @FXML
-    private ChoiceBox<Item> itemChoiceBox;
+    private ComboBox<Item> itemChoiceBox;
 
     @FXML
     private TextField quantityField;
@@ -108,6 +111,27 @@ public class Records_Controller implements Initializable {
             addButton.setDisable(true);
         }
     }
+
+    @FXML
+    void itemSelectionChanged() {
+        quantityField.setText("1");
+    }
+
+    @FXML
+    void quantityTyped() {
+        Item item=itemChoiceBox.getSelectionModel().getSelectedItem();
+        String name=item.getItemName();
+        int quantity=Integer.parseInt(quantityField.getText());
+        int remaining=getTotalRemaining();
+
+        if(quantity>remaining&& quantity!=0){
+            Notifications error=new Notifications("Error",String.format("Only %d is/are available for the item %s.",remaining,name));
+            error.showError();
+            quantityField.setText(remaining+"");
+        }
+    }
+
+
 
     public int getActiveID() {
         return activeID;
@@ -596,6 +620,29 @@ public class Records_Controller implements Initializable {
 
     public void setDashboardController(Dashboard_Controller controller) {
         dashboardController = controller;
+    }
+
+    public int getTotalRemaining(){
+        int totalRemaining=0;
+
+        Item choice= itemChoiceBox.getSelectionModel().getSelectedItem();
+        int itemId=choice.getItemID();
+
+        try {
+            connect = new ConnectionClass();
+            rs = connect.select(String.format("SELECT remaining FROM gnhs_system_db.batch " +
+                    "WHERE batch.items_item_id='%d';", itemId));
+            while (rs.next()) {
+                totalRemaining+=rs.getInt("remaining");
+            }
+            connect.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println();
+        }
+
+        return  totalRemaining;
+
     }
 
     @Override
